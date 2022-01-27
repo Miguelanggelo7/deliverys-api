@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon -r dotenv/config ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,14 @@
   "bugs": {
     "url": "https://github.com/Miguelanggelo7/deliverys-api/issues"
   },
-  "homepage": "https://github.com/Miguelanggelo7/deliverys-api#readme"
+  "homepage": "https://github.com/Miguelanggelo7/deliverys-api#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "express-promise-router": "^4.1.1",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "dotenv": "^14.3.2",
+    "nodemon": "^2.0.15"
+  }
 }

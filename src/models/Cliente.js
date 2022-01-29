@@ -1,17 +1,17 @@
 const db = require("../db");
 
 // Obtener todos los clientes
-const findAll = () => {
+const findAll = async () => {
   const query = `
     SELECT *
     FROM clientes
   `;
-
-  return db.query(query);
+  const rows = await db.query(query);
+  return rows[0];
 };
 
 // Obtener cliente por su cédula
-const findById =  (id) => {
+const findById =  async (id) => {
   const query = `
     SELECT *
     FROM clientes
@@ -20,10 +20,12 @@ const findById =  (id) => {
 
   const params = [id];
 
-  return db.query(query, params);
+  const rows = await db.query(query, params);
+
+  return rows[0][0];
 };
 
-const create = (cliente) => {
+const create = async (cliente) => {
   const query = `
     INSERT INTO clientes
     (id, email, password, saldo, nombre, apellido, telefono, alt_telefono, direccion_id)
@@ -42,10 +44,10 @@ const create = (cliente) => {
     cliente.direccion_id,
   ];
 
-  return db.query(query, params);
+  await db.query(query, params);
 };
 
-const update = (id, cliente) => {
+const update = async (id, cliente) => {
   const query = `
     UPDATE clientes
     SET 
@@ -74,18 +76,17 @@ const update = (id, cliente) => {
     id
   ];
 
-  return db.query(query, params);
+  await db.query(query, params);
 };
 
-const deleteCliente = (id) => {
+const deleteCliente = async (id) => {
   const query = `
     DELETE FROM clientes
     WHERE id = ?
   `;
 
   const params = [id];
-
-  return db.query(query, params);
+  await db.query(query, params);
 };
 
 module.exports = {

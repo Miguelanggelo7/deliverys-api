@@ -7,14 +7,14 @@ const router = new Router();
 // Obtener todos 
 router.get("/", async (req, res) => {
   const rows = await Cliente.findAll();
-  res.json(rows[0]);
+  res.json(rows);
 });
 
 // Obtener uno por su id
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
   const row = await Cliente.findById(id);
-  res.json(row[0]);
+  res.json(row);
 });
 
 // Crear cliente

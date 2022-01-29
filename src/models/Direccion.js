@@ -15,9 +15,9 @@ const findAll = async () => {
 // Buscar por id
 const findById = async (id) => {
   const query = `
-      SELECT *
-      FROM direcciones
-      WHERE id = ?
+    SELECT *
+    FROM direcciones
+    WHERE id = ?
   `;
 
   const params = [id];
@@ -28,19 +28,18 @@ const findById = async (id) => {
 };
 
 // Crear nueva direccion
-const create = async (id) => {
+const create = async (direccion) => {
   const query = `
-      INSERT INTO direcciones
-      (id, id_pais, estado, ciudad, parroquia)
-      VALUES(?, ?, ?, ?, ?)
+    INSERT INTO direcciones
+    (id_pais, estado, ciudad, parroquia)
+    VALUES(?, ?, ?, ?)
   `;
 
   const params = [
-      direccion.id,
-      direccion.id_pais,
-      direccion.estado,
-      direccion.ciudad,
-      direccion.parroquia,
+    direccion.id_pais,
+    direccion.estado,
+    direccion.ciudad,
+    direccion.parroquia,
   ];
 
   await db.query(query, params);
@@ -49,22 +48,21 @@ const create = async (id) => {
 // Actualizar una direccion
 const update = async (id, direccion) => {
   const query = `
-      UPDATE direcciones
-      SET id = ?,
-      id_pais = ?,
-      estado = ?,
-      ciudad = ?,
-      parroquia = ?
-      WHERE id = ?
+    UPDATE direcciones
+    SET
+    id_pais = ?,
+    estado = ?,
+    ciudad = ?,
+    parroquia = ?
+    WHERE id = ?
   `;
 
   const params = [
-      direccion.id,
-      direccion.id_pais,
-      direccion.estado,
-      direccion.ciudad,
-      direccion.parroquia,
-      id
+    direccion.id_pais,
+    direccion.estado,
+    direccion.ciudad,
+    direccion.parroquia,
+    id
   ];
 
   await db.query(query, params);
@@ -73,8 +71,8 @@ const update = async (id, direccion) => {
 // Eliminar una direccion
 const deleteDireccion = async (id) => {
   const query = `
-      DELETE FROM direcciones
-      WHERE id = ?
+    DELETE FROM direcciones
+    WHERE id = ?
   `;
 
   const params = [id];

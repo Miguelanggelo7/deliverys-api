@@ -20,7 +20,7 @@
   "dependencies": {
     "express": "^4.17.2",
     "express-promise-router": "^4.1.1",
-    "mysql": "^2.18.1"
+    "mysql2": "^2.3.3"
   },
   "devDependencies": {
     "dotenv": "^14.3.2",

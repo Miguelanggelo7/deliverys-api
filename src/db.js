@@ -1,4 +1,4 @@
-const mysql = require("mysql");
+const mysql = require("mysql2/promise");
 
 const db = mysql.createPool({
   connectionLimit: 5,

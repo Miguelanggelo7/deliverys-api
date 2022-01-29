@@ -28,15 +28,14 @@ const findById = async (id) => {
 };
 
 // Crear nueva direccion
-const create = async (id) => {
+const create = async (direccion) => {
   const query = `
       INSERT INTO direcciones
-      (id, id_pais, estado, ciudad, parroquia)
-      VALUES(?, ?, ?, ?, ?)
+      (id_pais, estado, ciudad, parroquia)
+      VALUES(?, ?, ?, ?)
   `;
 
   const params = [
-      direccion.id,
       direccion.id_pais,
       direccion.estado,
       direccion.ciudad,
@@ -50,7 +49,7 @@ const create = async (id) => {
 const update = async (id, direccion) => {
   const query = `
       UPDATE direcciones
-      SET id = ?,
+      SET
       id_pais = ?,
       estado = ?,
       ciudad = ?,
@@ -59,7 +58,6 @@ const update = async (id, direccion) => {
   `;
 
   const params = [
-      direccion.id,
       direccion.id_pais,
       direccion.estado,
       direccion.ciudad,

@@ -33,8 +33,8 @@ router.put("/:id", async (req, res) => {
 // Eliminar cliente
 router.delete("/:id", async (req, res) => {
   const id = req.params.id;
-  await Cliente.deleteCliente(id);
-  res.json({ message: `Cliente con id ${id} eliminado` });
+  await Cliente.delete(id);
+  res.json({ message: `Cliente con id ${id} ha sido eliminado` });
 });
 
 module.exports = router;

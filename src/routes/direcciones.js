@@ -19,21 +19,22 @@ router.get("/:id", async (req, res) => {
 
 //Crear uno
 router.post("/", async (req, res) => {
-  const direccion = await Direccion.create(req.body);
-  res.status(201).json(direccion);
+  await Direccion.create(req.body);
+  res.status(201).json({ message: "Dirección creada" });
 });
 
 //Actualizar
 router.put("/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const direccion = await Direccion.update(id, req.body);
-  res.json(direccion);
+  await Direccion.update(id, req.body);
+  res.json({message: "Dirección actualizada"});
 });
 
 //Borrar
 router.delete("/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   await Direccion.delete(id);
+  res.json({ message: `Dirección con id ${id} ha sido eliminada` });
 });
 
 module.exports = router;

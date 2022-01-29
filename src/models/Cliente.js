@@ -94,5 +94,6 @@ module.exports = {
   findById,
   create,
   update,
-  deleteCliente
 };
+
+module.exports.delete = deleteCliente;

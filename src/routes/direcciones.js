@@ -7,14 +7,14 @@ const router = new Router();
 //Obtener todos
 router.get("/", async (req, res) => {
   const direcciones = await Direccion.findAll();
-  res.json(direcciones[0]);
+  res.json(direcciones);
 });
 
 //Obtener uno
 router.get("/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const direccion = await Direccion.findById(id);
-  res.json(direccion[0]);
+  res.json(direccion);
 });
 
 //Crear uno

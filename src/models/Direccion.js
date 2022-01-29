@@ -1,13 +1,15 @@
 const db = require("../db");
 
 // Buscar todas las direcciones
-const findAll = () => {
+const findAll = async () => {
   const query = `
     SELECT *
     FROM direcciones
   `;
 
-  return db.query(query);
+  const rows = await db.query(query);
+
+  return rows[0];
 };
   
 // Buscar por id
@@ -20,7 +22,9 @@ const findById = async (id) => {
 
   const params = [id];
 
-  return db.query(query, params);
+  const rows = await db.query(query, params);
+
+  return rows[0][0];
 };
 
 // Crear nueva direccion
@@ -39,7 +43,7 @@ const create = async (id) => {
       direccion.parroquia,
   ];
 
-  return db.query(query, params);
+  await db.query(query, params);
 };
 
 // Actualizar una direccion
@@ -63,7 +67,7 @@ const update = async (id, direccion) => {
       id
   ];
 
-  return db.query(query, params);
+  await db.query(query, params);
 };
 
 // Eliminar una direccion
@@ -75,7 +79,7 @@ const deleteDireccion = async (id) => {
 
   const params = [id];
 
-  return db.query(query, params);
+  await db.query(query, params);
 };
 
   module.exports = { findAll, findById, create, update };

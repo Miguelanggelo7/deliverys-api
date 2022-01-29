@@ -7,14 +7,14 @@ const router = new Router();
 //Obtener todos
 router.get("/", async (req, res) => {
   const direcciones = await Direccion.findAll();
-  res.json(direcciones);
+  res.json(direcciones[0]);
 });
 
 //Obtener uno
 router.get("/:id", async (req, res) => {
-  const idDireccion = parseInt(req.params.id);
-  const direccion = await Direccion.findById(idDireccion);
-  res.json(direccion);
+  const id = parseInt(req.params.id);
+  const direccion = await Direccion.findById(id);
+  res.json(direccion[0]);
 });
 
 //Crear uno
@@ -25,15 +25,15 @@ router.post("/", async (req, res) => {
 
 //Actualizar
 router.put("/:id", async (req, res) => {
-  const idDireccion = parseInt(req.params.id);
-  const direccion = await Direccion.update(idDireccion, req.body);
+  const id = parseInt(req.params.id);
+  const direccion = await Direccion.update(id, req.body);
   res.json(direccion);
 });
 
 //Borrar
 router.delete("/:id", async (req, res) => {
-  const idDireccion = parseInt(req.params.id);
-  await Direccion.delete(idDireccion);
+  const id = parseInt(req.params.id);
+  await Direccion.delete(id);
 });
 
 module.exports = router;

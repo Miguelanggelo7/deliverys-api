@@ -7,35 +7,28 @@ const findAll = () => {
     FROM direcciones
   `;
 
-  return new Promise((resolve, reject) => {
-    db.query(query, (err, rows) => {
-      if (err) return reject(err);
-      resolve(rows);
-    });
-  });
+  return db.query(query);
 };
   
 // Buscar por id
 const findById = async (id) => {
   const query = `
       SELECT *
-      FROM "direcciones" 
-      WHERE "id" = $1
+      FROM direcciones
+      WHERE id = ?
   `;
 
   const params = [id];
 
-  const { rows } = await db.query(query, params);
-  return rows[0];
+  return db.query(query, params);
 };
 
 // Crear nueva direccion
 const create = async (id) => {
   const query = `
-      INSERT INTO "direcciones"
-      ("id", "id_pais", "estado", "ciudad", "parroquia")
-      VALUES($1, $2, $3, $4, $5)
-      RETURNING *
+      INSERT INTO direcciones
+      (id, id_pais, estado, ciudad, parroquia)
+      VALUES(?, ?, ?, ?, ?)
   `;
 
   const params = [
@@ -46,22 +39,19 @@ const create = async (id) => {
       direccion.parroquia,
   ];
 
-  const { rows } = await db.query(query, params);
-
-  return rows[0];
+  return db.query(query, params);
 };
 
 // Actualizar una direccion
 const update = async (id, direccion) => {
   const query = `
-      UPDATE "direcciones"
-      SET "id" = $1,
-      "id_pais" = $2,
-      "estado" = $3,
-      "ciudad" = $4,
-      "parroquia" = $5
-      WHERE "id" = $6
-      RETURNING *
+      UPDATE direcciones
+      SET id = ?,
+      id_pais = ?,
+      estado = ?,
+      ciudad = ?,
+      parroquia = ?
+      WHERE id = ?
   `;
 
   const params = [
@@ -73,21 +63,19 @@ const update = async (id, direccion) => {
       id
   ];
 
-  const { rows } = await db.query(query, params);
-
-  return rows[0];
+  return db.query(query, params);
 };
 
 // Eliminar una direccion
 const deleteDireccion = async (id) => {
   const query = `
-      DELETE FROM "direcciones"
-      WHERE "id" = $1
+      DELETE FROM direcciones
+      WHERE id = ?
   `;
 
   const params = [id];
 
-  await db.query(query, params);
+  return db.query(query, params);
 };
 
   module.exports = { findAll, findById, create, update };

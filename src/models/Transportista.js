@@ -29,7 +29,7 @@ const create = async (transportistas) => {
   const query = `
     INSERT INTO transportistas
     (id, nombre, apellido, telefono, alt_telefono, email, password, saldo, licencia, fecha_ingreso, disponibilidad, curso_aprobado, f_curso, antecedentes, direccion_id, nucleo_id)
-    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?) 
   `;
 
   const params = [
@@ -42,7 +42,6 @@ const create = async (transportistas) => {
     transportistas.password,
     transportistas.saldo,
     transportistas.licencia,
-    transportistas.fecha_ingreso,
     transportistas.disponibilidad,
     transportistas.curso_aprobado,
     transportistas.f_curso,
@@ -54,19 +53,25 @@ const create = async (transportistas) => {
   await db.query(query, params);
 };
 
-const update = async (id, cliente) => {
+const update = async (id, transportistas) => {
   const query = `
-    UPDATE clientes
+    UPDATE transportistas
     SET 
       id = ?, 
-      email = ?, 
-      password = ?, 
-      saldo = ?, 
       nombre = ?, 
       apellido = ?, 
       telefono = ?, 
       alt_telefono = ?, 
-      direccion_id = ?
+      email = ?,
+      password = ?,
+      saldo = ?,
+      licencia = ?,
+      disponibilidad = ?,
+      curso_aprobado = ?,
+      f_curso = ?,
+      antecedentes = ?,
+      direccion_id = ?,
+      nucleo_id = ?,
     WHERE id = ? 
   `;
 
@@ -80,7 +85,6 @@ const update = async (id, cliente) => {
     transportistas.password,
     transportistas.saldo,
     transportistas.licencia,
-    transportistas.fecha_ingreso,
     transportistas.disponibilidad,
     transportistas.curso_aprobado,
     transportistas.f_curso,

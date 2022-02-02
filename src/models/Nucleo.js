@@ -65,7 +65,7 @@ const update = async (id, nucleos) => {
     telefono = ?,
     com_vuelo = ?,
     com_vehiculo_motor = ?,
-    com_bicicleta = ?,
+    com_bicicleta = ?
     WHERE id = ?
   `;
 

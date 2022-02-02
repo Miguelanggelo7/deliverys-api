@@ -24,6 +24,9 @@ const findById = async (id) => {
 
   const rows = await db.query(query, params);
 
+  if (typeof rows[0][0] === "undefined")
+    throw "not-found";
+
   return rows[0][0];
 };
 
@@ -50,7 +53,9 @@ const create = async (encomiendas) => {
     encomiendas.precio
   ];
 
-  await db.query(query, params);
+  const row = await db.query(query, params);
+
+  return row;
 };
 
 // Actualizar
@@ -69,7 +74,7 @@ const update = async (id, encomiendas) => {
     nucleo_ext_id = ?,
     transp_lcl_id = ?,
     transp_ext_id = ?,
-    precio = ?,
+    precio = ?
     WHERE id = ?
   `;
 
@@ -101,7 +106,10 @@ const deleteEncomiendas = async (id) => {
 
   const params = [id];
 
-  await db.query(query, params);
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0)
+    throw "not-found";
 };
 
   module.exports = { findAll, findById, create, update  };

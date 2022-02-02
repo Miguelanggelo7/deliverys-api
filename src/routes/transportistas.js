@@ -19,15 +19,15 @@ router.get("/:id", async (req, res) => {
 
 //Crear uno
 router.post("/", async (req, res) => {
-  await Transportista.create(req.body);
-  res.status(201).json({ message: "Transportista creado" });
+  const row = await Transportista.create(req.body);
+  res.status(201).json(row);
 });
 
 //Actualizar
 router.put("/:id", async (req, res) => {
   const id = req.params.id;
   await Transportista.update(id, req.body);
-  res.json({message: "Transportista actualizado"});
+  res.json({ message: "Transportista actualizado" });
 });
 
 //Borrar

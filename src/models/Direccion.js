@@ -1,3 +1,4 @@
+const res = require("express/lib/response");
 const db = require("../db");
 
 // Buscar todas las direcciones
@@ -24,6 +25,9 @@ const findById = async (id) => {
 
   const rows = await db.query(query, params);
 
+  if (typeof rows[0][0] === "undefined")
+    throw "not-found";
+
   return rows[0][0];
 };
 
@@ -33,6 +37,7 @@ const create = async (direccion) => {
     INSERT INTO direcciones
     (id_pais, estado, ciudad, parroquia)
     VALUES(?, ?, ?, ?)
+    RETURNING *
   `;
 
   const params = [
@@ -42,7 +47,9 @@ const create = async (direccion) => {
     direccion.parroquia,
   ];
 
-  await db.query(query, params);
+  const row = await db.query(query, params);
+
+  return row[0][0];
 };
 
 // Actualizar una direccion
@@ -77,7 +84,10 @@ const deleteDireccion = async (id) => {
 
   const params = [id];
 
-  await db.query(query, params);
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0)
+    throw "not-found";
 };
 
   module.exports = { findAll, findById, create, update };

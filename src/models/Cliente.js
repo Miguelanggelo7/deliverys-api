@@ -6,7 +6,9 @@ const findAll = async () => {
     SELECT *
     FROM clientes
   `;
+
   const rows = await db.query(query);
+  
   return rows[0];
 };
 
@@ -22,6 +24,9 @@ const findById =  async (id) => {
 
   const rows = await db.query(query, params);
 
+  if (typeof rows[0][0] === "undefined")
+    throw "not-found";
+
   return rows[0][0];
 };
 
@@ -30,6 +35,7 @@ const create = async (cliente) => {
     INSERT INTO clientes
     (id, email, password, saldo, nombre, apellido, telefono, alt_telefono, direccion_id)
     VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) 
+    RETURNING *
   `;
 
   const params = [
@@ -44,7 +50,9 @@ const create = async (cliente) => {
     cliente.direccion_id,
   ];
 
-  await db.query(query, params);
+  const row = await db.query(query, params);
+
+  return row;
 };
 
 const update = async (id, cliente) => {
@@ -86,7 +94,11 @@ const deleteCliente = async (id) => {
   `;
 
   const params = [id];
-  await db.query(query, params);
+
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0)
+    throw "not-found";
 };
 
 module.exports = {

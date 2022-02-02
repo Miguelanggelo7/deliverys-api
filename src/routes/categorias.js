@@ -19,15 +19,15 @@ router.get("/:id", async (req, res) => {
 
 //Crear uno
 router.post("/", async (req, res) => {
-  await Categoria.create(req.body);
-  res.status(201).json({ message: "Categoria creada" });
+  const row = await Categoria.create(req.body);
+  res.status(201).json(row);
 });
 
 //Actualizar
 router.put("/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   await Categoria.update(id, req.body);
-  res.json({message: "Categoria actualizada"});
+  res.json({ message: "Categoria actualizada" });
 });
 
 //Borrar

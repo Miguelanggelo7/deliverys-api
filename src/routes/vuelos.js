@@ -19,15 +19,15 @@ router.get("/:id", async (req, res) => {
 
 //Crear uno
 router.post("/", async (req, res) => {
-  await Vuelo.create(req.body);
-  res.status(201).json({ message: "Vuelo creado" });
+  const row = await Vuelo.create(req.body);
+  res.status(201).json(row);
 });
 
 //Actualizar
 router.put("/:id", async (req, res) => {
   const id = req.params.id;
   await Vuelo.update(id, req.body);
-  res.json({message: "Vuelo actualizado"});
+  res.json({ message: "Vuelo actualizado" });
 });
 
 //Borrar

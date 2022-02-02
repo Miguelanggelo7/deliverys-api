@@ -50,6 +50,7 @@ const create = async (contiene) => {
     INSERT INTO contiene
     (articulo_id, paquete_id, cantidad)
     VALUES(?, ?, ?)
+    RETURNING *
   `;
 
   const params = [
@@ -58,7 +59,9 @@ const create = async (contiene) => {
     contiene.cantidad
   ];
 
-  await db.query(query, params);
+  const row = await db.query(query, params);
+
+  return row;
 };
 
 // Actualizar

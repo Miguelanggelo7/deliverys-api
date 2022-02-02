@@ -20,15 +20,15 @@ router.get("/:paquete/:articulo", async (req, res) => {
 
 // Crear 
 router.post("/", async (req, res) => {
-  await Contiene.create(req.body);
-  res.status(201).json({ message: "Articulo creado" });
+  const row = await Contiene.create(req.body);
+  res.status(201).json(row);
 });
 
 // Actualizar 
 router.put("/:id", async (req, res) => {
   const id = req.params.id;
   await Contiene.update(id, req.body);
-  res.json({ message: "Articulo actualizado" });
+  res.json({ message: "Registro actualizado" });
 });
 
 // Eliminar 

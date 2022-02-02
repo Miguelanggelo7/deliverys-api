@@ -24,6 +24,9 @@ const findById = async (id) => {
 
   const rows = await db.query(query, params);
 
+  if (typeof rows[0][0] === "undefined")
+    throw "not-found";
+
   return rows[0][0];
 };
 
@@ -33,6 +36,7 @@ const create = async (vuelos) => {
     INSERT INTO vuelos
     (id, tiempo_retraso, descripcion_retraso, tiempo_retraso, fh_salida, fh_llegada, aerolinea)
     VALUES(?, ?, ?, ?, ?, ?, ?)
+    RETURNING *
   `;
 
   const params = [
@@ -86,7 +90,10 @@ const deteleVuelo = async (id) => {
 
   const params = [id];
 
-  await db.query(query, params);
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0)
+    throw "not-found";
 };
 
   module.exports = { findAll, findById, create, update  };

@@ -19,8 +19,8 @@ router.get("/:id", async (req, res) => {
 
 // Crear cliente
 router.post("/", async (req, res) => {
-  await Cliente.create(req.body);
-  res.status(201).json({ message: "Cliente creado" });
+  const row = await Cliente.create(req.body);
+  res.status(201).json(row);
 });
 
 // Actualizar cliente

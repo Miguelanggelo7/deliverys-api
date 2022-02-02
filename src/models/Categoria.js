@@ -24,6 +24,9 @@ const findById = async (id) => {
 
   const rows = await db.query(query, params);
 
+  if (typeof rows[0][0] === "undefined")
+    throw "not-found";
+
   return rows[0][0];
 };
 
@@ -33,6 +36,7 @@ const create = async (categorias) => {
     INSERT INTO categorias
     (id, peso_min, precio, dimension_min, fragilidad)
     VALUES(?, ?, ?, ?, ?)
+    RETURNING *
   `;
 
   const params = [
@@ -80,7 +84,10 @@ const deleteCategoria = async (id) => {
 
   const params = [id];
 
-  await db.query(query, params);
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0)
+    throw "not-found";
 };
 
   module.exports = { findAll, findById, create, update  };

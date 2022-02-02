@@ -19,15 +19,15 @@ router.get("/:id", async (req, res) => {
 
 //Crear uno
 router.post("/", async (req, res) => {
-  await Direccion.create(req.body);
-  res.status(201).json({ message: "Dirección creada" });
+  const row = await Direccion.create(req.body);
+  res.status(201).json(row);
 });
 
 //Actualizar
 router.put("/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   await Direccion.update(id, req.body);
-  res.json({message: "Dirección actualizada"});
+  res.json({ message: "Dirección actualizada" });
 });
 
 //Borrar

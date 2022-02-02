@@ -28,42 +28,28 @@ const findById = async (id) => {
 };
 
 // Crear nueva
-const create = async (articulos) => {
+const create = async (articulo) => {
   const query = `
     INSERT INTO articulos
-    (id, paquete_id, cantidad, descripcion)
-    VALUES(?, ?, ?, ?, ?)
+    (descripcion)
+    VALUES(?)
   `;
 
-  const params = [
-    articulos.id,
-    articulos.paquete_id,
-    articulos.cantidad,
-    articulos.descripcion
-  ];
+  const params = [articulo.descripcion];
 
   await db.query(query, params);
 };
 
 // Actualizar
-const update = async (id, articulos) => {
+const update = async (id, articulo) => {
   const query = `
     UPDATE articulos
     SET
-    id = ?,
-    paquete_id = ?,
-    cantidad = ?,
     descripcion = ?,
     WHERE id = ?
   `;
 
-  const params = [
-    articulos.id,
-    articulos.paquete_id,
-    articulos.cantidad,
-    articulos.descripcion,
-    id
-  ];
+  const params = [articulo.descripcion, id];
 
   await db.query(query, params);
 };

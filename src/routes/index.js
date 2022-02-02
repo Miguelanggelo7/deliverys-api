@@ -3,6 +3,8 @@ const direcciones = require("./direcciones");
 const categorias = require("./categorias");
 const vuelos = require("./vuelos");
 const transportistas = require("./transportistas");
+const articulos = require("./articulos");
+const encomiendas = require("./encomiendas");
 
 module.exports = app => {
   app.use("/clientes", clientes);
@@ -10,4 +12,6 @@ module.exports = app => {
   app.use("/categorias", categorias);
   app.use("/vuelos", vuelos);
   app.use("/transportistas", transportistas);
+  app.use("/articulos", articulos);
+  app.use("/encomiendas", encomiendas);
 };

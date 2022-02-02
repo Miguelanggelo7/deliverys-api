@@ -4,7 +4,7 @@ const db = require("../db");
 const findAll = async () => {
   const query = `
     SELECT *
-    FROM articulos
+    FROM nucleos
   `;
 
   const rows = await db.query(query);
@@ -16,7 +16,7 @@ const findAll = async () => {
 const findById = async (id) => {
   const query = `
     SELECT *
-    FROM articulos
+    FROM nucleos
     WHERE id = ?
   `;
 
@@ -31,19 +31,22 @@ const findById = async (id) => {
 };
 
 // Crear nueva
-const create = async (articulos) => {
+const create = async (nucleos) => {
   const query = `
-    INSERT INTO articulos
-    (id, paquete_id, cantidad, descripcion)
-    VALUES(?, ?, ?, ?, ?)
+    INSERT INTO nucleos
+    (id, direccion_id, nombre, telefono, com_vuelo, com_vehiculo_motor, com_bicicleta)
+    VALUES(?, ?, ?, ?, ?, ?, ?)
     RETURNING *
   `;
 
   const params = [
-    articulos.id,
-    articulos.paquete_id,
-    articulos.cantidad,
-    articulos.descripcion
+    nucleos.id,
+    nucleos.direccion_id,
+    nucleos.nombre,
+    nucleos.telefono,
+    nucleos.com_vuelo,
+    nucleos.com_vehiculo_motor,
+    nucleos.com_bicicleta
   ];
 
   const row = await db.query(query, params);
@@ -52,22 +55,28 @@ const create = async (articulos) => {
 };
 
 // Actualizar
-const update = async (id, articulos) => {
+const update = async (id, nucleos) => {
   const query = `
-    UPDATE articulos
+    UPDATE nucleos
     SET
     id = ?,
-    paquete_id = ?,
-    cantidad = ?,
-    descripcion = ?,
+    direccion_id = ?,
+    nombre = ?,
+    telefono = ?,
+    com_vuelo = ?,
+    com_vehiculo_motor = ?,
+    com_bicicleta = ?,
     WHERE id = ?
   `;
 
   const params = [
-    articulos.id,
-    articulos.paquete_id,
-    articulos.cantidad,
-    articulos.descripcion,
+    nucleos.id,
+    nucleos.direccion_id,
+    nucleos.nombre,
+    nucleos.telefono,
+    nucleos.com_vuelo,
+    nucleos.com_vehiculo_motor,
+    nucleos.com_bicicleta,
     id
   ];
 
@@ -75,9 +84,9 @@ const update = async (id, articulos) => {
 };
 
 // Eliminar
-const deleteArticulo = async (id) => {
+const deleteNucleo = async (id) => {
   const query = `
-    DELETE FROM articulos
+    DELETE FROM nucleos
     WHERE id = ?
   `;
 
@@ -90,4 +99,4 @@ const deleteArticulo = async (id) => {
 };
 
   module.exports = { findAll, findById, create, update  };
-  module.exports.delete = deleteArticulo;
+  module.exports.delete = deleteNucleo;

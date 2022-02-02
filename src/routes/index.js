@@ -5,6 +5,7 @@ const vuelos = require("./vuelos");
 const transportistas = require("./transportistas");
 const articulos = require("./articulos");
 const encomiendas = require("./encomiendas");
+const nucleos = require("./nucleos");
 
 module.exports = app => {
   app.use("/clientes", clientes);
@@ -14,4 +15,5 @@ module.exports = app => {
   app.use("/transportistas", transportistas);
   app.use("/articulos", articulos);
   app.use("/encomiendas", encomiendas);
+  app.use("/nucleos", nucleos);
 };

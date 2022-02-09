@@ -4,7 +4,7 @@ const db = require("../db");
 const findAll = async () => {
   const query = `
     SELECT *
-    FROM categorias
+    FROM paquetes
   `;
 
   const rows = await db.query(query);
@@ -16,7 +16,7 @@ const findAll = async () => {
 const findById = async (id) => {
   const query = `
     SELECT *
-    FROM categorias
+    FROM paquetes
     WHERE id = ?
   `;
 
@@ -31,44 +31,50 @@ const findById = async (id) => {
 };
 
 // Crear nueva
-const create = async (categorias) => {
+const create = async (paquetes) => {
   const query = `
-    INSERT INTO categorias
-    (id, peso_min, precio, dimension_min, fragilidad)
-    VALUES(?, ?, ?, ?, ?)
+    INSERT INTO paquetes
+    (peso, alto, ancho, largo, fragil, categoria_id, encomienda_id)
+    VALUES(?, ?, ?, ?, ?, ?, ?)
     RETURNING *
   `;
 
   const params = [
-    categorias.id,
-    categorias.peso_min,
-    categorias.precio,
-    categorias.dimension_min,
-    categorias.fragilidad
+    paquetes.peso,
+    paquetes.alto,
+    paquetes.ancho,
+    paquetes.largo,
+    paquetes.fragil,
+    paquetes.categoria_id,
+    paquetes.encomienda_id
   ];
 
   await db.query(query, params);
 };
 
 // Actualizar
-const update = async (id, categoria) => {
+const update = async (id, paquetes) => {
   const query = `
-    UPDATE categorias
+    UPDATE paquetes
     SET
-    id = ?,
-    peso_min = ?,
-    precio = ?,
-    dimension_min = ?,
-    fragilidad = ?
+    peso = ?,
+    alto = ?,
+    ancho = ?,
+    largo = ?,
+    fragil = ?,
+    categoria_id = ?,
+    encomienda_id = ?
     WHERE id = ?
   `;
 
   const params = [
-    direccion.id,
-    categoria.peso_min,
-    categoria.precio,
-    categoria.dimension_min,
-    categoria.fragilidad,
+    paquetes.peso,
+    paquetes.alto,
+    paquetes.ancho,
+    paquetes.largo,
+    paquetes.fragil,
+    paquetes.categoria_id,
+    paquetes.encomienda_id,
     id
   ];
 
@@ -76,9 +82,9 @@ const update = async (id, categoria) => {
 };
 
 // Eliminar
-const deleteCategoria = async (id) => {
+const deletePaquete = async (id) => {
   const query = `
-    DELETE FROM categorias
+    DELETE FROM paquetes
     WHERE id = ?
   `;
 
@@ -91,4 +97,4 @@ const deleteCategoria = async (id) => {
 };
 
   module.exports = { findAll, findById, create, update  };
-  module.exports.delete = deleteCategoria;
+  module.exports.delete = deletePaquete;

@@ -97,6 +97,19 @@ const update = async (id, encomiendas) => {
   await db.query(query, params);
 };
 
+//Actualizar Estado
+const updateEstado = async (id) => {
+  const query = `CALL sp_update_estado(?)`;
+
+  const params = [id];
+
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0)
+    throw "not-found";
+
+}
+
 // Eliminar
 const deleteEncomiendas = async (id) => {
   const query = `
@@ -112,5 +125,5 @@ const deleteEncomiendas = async (id) => {
     throw "not-found";
 };
 
-  module.exports = { findAll, findById, create, update  };
+  module.exports = { findAll, findById, create, update, updateEstado };
   module.exports.delete = deleteEncomiendas;

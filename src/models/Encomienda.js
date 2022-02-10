@@ -125,5 +125,23 @@ const deleteEncomiendas = async (id) => {
     throw "not-found";
 };
 
-  module.exports = { findAll, findById, create, update, updateEstado };
+const solicitar = async (id) => {
+  const query = `CALL sp_solicitar_encomienda(?)`;
+
+  const params = [id];
+
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0)
+    throw "not-found";
+};
+
+  module.exports = {
+    findAll, 
+    findById, 
+    create, 
+    update, 
+    updateEstado,
+    solicitar
+  };
   module.exports.delete = deleteEncomiendas;

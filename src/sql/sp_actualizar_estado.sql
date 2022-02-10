@@ -1,8 +1,8 @@
 DROP PROCEDURE IF EXISTS sp_update_estado;
 
 CREATE PROCEDURE sp_update_estado(
-	transportista VARCHAR(9),
 	encomienda VARCHAR(7),
+	transportista VARCHAR(9),
 	newEstado VARCHAR(15)
 )
 BEGIN

@@ -37,26 +37,32 @@ router.delete("/:id", async (req, res) => {
   res.json({ message: `Encomienda con id ${id} ha sido eliminada` });
 });
 
-
 //Actualizar estado de encomienda
-router.put("/update-estado/:encomienda_id/:transportista_id", async (req, res) => {
-  const [encomienda_id, transportista_id] = req.params;
-  await Transportista.updateEstadoEncomienda(encomienda_id, transportista_id, null);
+router.patch('/update-estado', async (req, res) => {
+  const {encomienda_id, transportista_id} = req.query;
+  await Encomienda.updateEstadoEncomienda(encomienda_id, transportista_id, null);
   res.json({ message: "Encomienda actualizada" });
 });
 
 //Poner encomienda en custodia
-router.put("/en-custodia/:encomienda_id/:transportista_id", async (req, res) => {
-  const [encomienda_id, transportista_id] = req.params;
-  await Transportista.updateEstadoEncomienda(encomienda_id, transportista_id, 'en custodia');
+router.patch("/en-custodia", async (req, res) => {
+  const {encomienda_id, transportista_id} = req.query;
+  await Encomienda.updateEstadoEncomienda(encomienda_id, transportista_id, 'en custodia');
   res.json({ message: "Encomienda actualizada" });
 });
 
 //cancelar encomienda
-router.put("/cancelar/:encomienda_id/:transportista_id", async (req, res) => {
-  const [encomienda_id, transportista_id] = req.params;
-  await Transportista.updateEstadoEncomienda(encomienda_id, transportista_id, 'cancelada');
+router.patch("/cancelar", async (req, res) => {
+  const {encomienda_id, transportista_id} = req.query;
+  await Encomienda.updateEstadoEncomienda(encomienda_id, transportista_id, 'cancelada');
   res.json({ message: "Encomienda actualizada" });
+});
+
+//solicitar encomienda
+router.patch("/solicitar_encomienda", async (req, res) => {
+  const { encomienda_id } = req.query;
+  await Encomienda.solicitar(encomienda_id);
+  res.json({ message: "Encomienda solicitada" });
 });
 
 module.exports = router;

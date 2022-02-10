@@ -16,11 +16,15 @@ BEGIN
 	
 		WHEN 'en espera' THEN
 
-				SET newEstado = 'en progreso';
-				-- Registrar fecha de salida
-				UPDATE encomiendas
-					SET fh_salida = NOW()
-					WHERE id = encomienda;
+			SET newEstado = 'en progreso';
+			
+			-- Registrar fecha de salida
+			UPDATE encomiendas
+				SET fh_salida = NOW()
+				WHERE id = encomienda;
+			
+			-- cobrarle al cliente
+			CALL sp_cobrar_encomienda_cliente(encomienda);
 			
 		WHEN 'en custodia'  THEN
 		
@@ -29,6 +33,14 @@ BEGIN
 		WHEN 'en progreso'  THEN
 		
 			SET newEstado = 'culminada';
+			
+			-- Registrar fecha de llegada
+			UPDATE encomiendas
+				SET fh_llegada = NOW()
+				WHERE id = encomienda;
+			
+			-- pagarle al transportista
+			CALL sp_pagar_encomienda_transportista(encomienda);
 			
 		ELSE 
 		

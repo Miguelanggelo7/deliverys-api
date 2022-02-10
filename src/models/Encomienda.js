@@ -110,6 +110,36 @@ const updateEstado = async (id) => {
 
 }
 
+//Poner en custodia
+const ponerEncomiendaEnCustodia = async (id) => {
+  const query = `UPDATE encomiendas
+                  SET estado = 'en custodia'
+                  WHERE id = ?`;
+
+  const params = [id];
+
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0)
+    throw "not-found";
+
+}
+
+const cancelarEncomienda = async (id) => {
+  const query = `UPDATE encomiendas
+                  SET estado = 'cancelada'
+                  WHERE id = ?`;
+
+  const params = [id];
+
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0)
+    throw "not-found";
+
+}
+
+
 // Eliminar
 const deleteEncomiendas = async (id) => {
   const query = `

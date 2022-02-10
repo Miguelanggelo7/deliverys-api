@@ -37,4 +37,26 @@ router.delete("/:id", async (req, res) => {
   res.json({ message: `Encomienda con id ${id} ha sido eliminada` });
 });
 
+
+//Actualizar estado de encomienda
+router.put("/update-estado/:encomienda_id/:transportista_id", async (req, res) => {
+  const [encomienda_id, transportista_id] = req.params;
+  await Transportista.updateEstadoEncomienda(encomienda_id, transportista_id, null);
+  res.json({ message: "Encomienda actualizada" });
+});
+
+//Poner encomienda en custodia
+router.put("/en-custodia/:encomienda_id/:transportista_id", async (req, res) => {
+  const [encomienda_id, transportista_id] = req.params;
+  await Transportista.updateEstadoEncomienda(encomienda_id, transportista_id, 'en custodia');
+  res.json({ message: "Encomienda actualizada" });
+});
+
+//cancelar encomienda
+router.put("/cancelar/:encomienda_id/:transportista_id", async (req, res) => {
+  const [encomienda_id, transportista_id] = req.params;
+  await Transportista.updateEstadoEncomienda(encomienda_id, transportista_id, 'cancelada');
+  res.json({ message: "Encomienda actualizada" });
+});
+
 module.exports = router;

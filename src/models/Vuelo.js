@@ -34,8 +34,9 @@ const findById = async (id) => {
 const create = async (vuelos) => {
   const query = `
     INSERT INTO vuelos
-    (id, tiempo_retraso, descripcion_retraso, tiempo_retraso, fh_salida, fh_llegada, aerolinea)
-    VALUES(?, ?, ?, ?, ?, ?, ?)
+    (id, tiempo_retraso, descripcion_retraso, tiempo_retraso, fh_salida, fh_llegada, aerolinea,
+      encomienda_id, recorrido_id)
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
     RETURNING *
   `;
 
@@ -46,7 +47,9 @@ const create = async (vuelos) => {
     vuelos.tiempo_retraso,
     vuelos.fh_salida,
     vuelos.fh_llegada,
-    vuelos.aerolinea
+    vuelos.aerolinea,
+    vuelos.encomienda_id,
+    vuelos.recorrido_id
   ];
 
   await db.query(query, params);
@@ -63,7 +66,9 @@ const update = async (id, vuelos) => {
     tiempo_retraso = ?,
     fh_salida = ?,
     fh_llegada = ?,
-    aerolinea = ?
+    aerolinea = ?,
+    encomienda_id = ?, 
+    recorrido_id =?
     WHERE id = ?
   `;
 
@@ -75,6 +80,8 @@ const update = async (id, vuelos) => {
     vuelos.fh_salida,
     vuelos.fh_llegada,
     vuelos.aerolinea,
+    vuelos.encomienda_id,
+    vuelos.recorrido_id,
     id
   ];
 

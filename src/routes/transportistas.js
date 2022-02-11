@@ -2,6 +2,7 @@ const Router = require("express-promise-router");
 const db = require("../db");
 const Transportista = require("../models/Transportista");
 
+
 const router = new Router();
 
 //Obtener todos

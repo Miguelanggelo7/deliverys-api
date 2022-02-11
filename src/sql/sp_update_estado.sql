@@ -8,12 +8,38 @@ CREATE PROCEDURE sp_update_estado(
 BEGIN
 
 	DECLARE oldEstado VARCHAR(15);
+
+	DECLARE _tipo VARCHAR(15);
+
+	SELECT tipo
+	INTO _tipo
+	FROM encomiendas
+	WHERE id = encomienda;
 	
 	IF transportista <=> NULL
 		OR encomienda <=> NULL
-		OR !(transportista <=> (SELECT transportista_id
-									FROM encomiendas
-									WHERE id = encomienda)) THEN
+		OR (
+			_tipo = 'normal'
+			AND transportista <> (
+				SELECT transportista_id
+				FROM encomiendas
+				WHERE id = encomienda
+			)
+		)
+		OR (
+			_tipo = 'extendida'
+			AND transportista NOT IN (
+				SELECT transportista_id
+				FROM recorridos
+				WHERE encomienda_id = encomienda
+				AND id = (
+					SELECT MAX(id) 
+					FROM recorridos
+					WHERE encomienda_id = encomienda
+            	)
+			)
+		)
+	THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '(sp_update_estado) Error: el transportista o encomienda ingresada no es valida';
 	
@@ -27,12 +53,12 @@ BEGIN
 		FROM encomiendas
 		WHERE id = encomienda;
 
-		CASE oldEstado
-		
-			WHEN NULL THEN
-			
-				SIGNAL SQLSTATE '45000'
+		IF oldEstado <=> NULL THEN
+			SIGNAL SQLSTATE '45000'
 				SET MESSAGE_TEXT = '(sp_update_estado) Error: la encomienda no ha sido iniciada, su estado no se puede actualizar';
+		END IF;
+
+		CASE oldEstado
 		
 			WHEN 'en espera' THEN
 
@@ -60,10 +86,19 @@ BEGIN
 					WHERE id = encomienda;
 				
 				-- pagarle al transportista
-				CALL sp_pagar_encomienda_transportista(encomienda);
+
+				IF (
+					SELECT tipo
+					FROM encomiendas
+					WHERE id = encomienda
+				) = 'normal'
+				THEN
+					CALL sp_pagar_encomienda_transportista(encomienda);
+				ELSE
+					CALL sp_pagar_encomienda_extendida_transportistas(encomienda);
+				END IF;
 				
 			ELSE 
-			
 				SET newEstado = oldEstado;
 				
 		END CASE;

@@ -39,28 +39,28 @@ router.delete("/:id", async (req, res) => {
 
 //Actualizar estado de encomienda
 router.patch('/update-estado', async (req, res) => {
-  const {encomienda_id, transportista_id} = req.query;
+  const {encomienda_id, transportista_id} = req.body;
   await Encomienda.updateEstadoEncomienda(encomienda_id, transportista_id, null);
   res.json({ message: "Encomienda actualizada" });
 });
 
 //Poner encomienda en custodia
 router.patch("/en-custodia", async (req, res) => {
-  const {encomienda_id, transportista_id} = req.query;
+  const {encomienda_id, transportista_id} = req.body;
   await Encomienda.updateEstadoEncomienda(encomienda_id, transportista_id, 'en custodia');
   res.json({ message: "Encomienda actualizada" });
 });
 
 //cancelar encomienda
 router.patch("/cancelar", async (req, res) => {
-  const {encomienda_id, transportista_id} = req.query;
+  const {encomienda_id, transportista_id} = req.body;
   await Encomienda.updateEstadoEncomienda(encomienda_id, transportista_id, 'cancelada');
   res.json({ message: "Encomienda actualizada" });
 });
 
 //solicitar encomienda
 router.patch("/solicitar_encomienda", async (req, res) => {
-  const { encomienda_id } = req.query;
+  const { encomienda_id } = req.body;
   await Encomienda.solicitar(encomienda_id);
   res.json({ message: "Encomienda solicitada" });
 });

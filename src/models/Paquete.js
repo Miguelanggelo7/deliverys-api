@@ -34,8 +34,8 @@ const findById = async (id) => {
 const create = async (paquetes) => {
   const query = `
     INSERT INTO paquetes
-    (peso, alto, ancho, largo, fragil, categoria_id, encomienda_id)
-    VALUES(?, ?, ?, ?, ?, ?, ?)
+    (peso, alto, ancho, largo, fragil, encomienda_id)
+    VALUES(?, ?, ?, ?, ?, ?)
     RETURNING *
   `;
 
@@ -45,7 +45,6 @@ const create = async (paquetes) => {
     paquetes.ancho,
     paquetes.largo,
     paquetes.fragil,
-    paquetes.categoria_id,
     paquetes.encomienda_id
   ];
 
@@ -62,7 +61,6 @@ const update = async (id, paquetes) => {
     ancho = ?,
     largo = ?,
     fragil = ?,
-    categoria_id = ?,
     encomienda_id = ?
     WHERE id = ?
   `;
@@ -73,7 +71,6 @@ const update = async (id, paquetes) => {
     paquetes.ancho,
     paquetes.largo,
     paquetes.fragil,
-    paquetes.categoria_id,
     paquetes.encomienda_id,
     id
   ];

@@ -7,7 +7,7 @@ const errorHandler = (err, req, res, next) => {
       return res.status(404).json({ message: "No se encontró el registro" });
   }
 
-  else res.json({ message: "error" })
+  else res.json({ message: err })
 }
 
 module.exports = errorHandler;

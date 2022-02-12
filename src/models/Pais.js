@@ -8,9 +8,9 @@ const findAll = async () => {
     FROM paises
   `;
 
-  const rows = await db.query(query);
+  const [rows] = await db.query(query);
 
-  return rows[0];
+  return rows;
 };
   
 // Buscar por id
@@ -23,12 +23,12 @@ const findById = async (id) => {
 
   const params = [id];
 
-  const rows = await db.query(query, params);
+  const [rows] = await db.query(query, params);
 
-  if (typeof rows[0][0] === "undefined")
+  if (typeof rows[0] === "undefined")
     throw "not-found";
 
-  return rows[0][0];
+  return rows[0];
 };
 
 // Crear nuevo 
@@ -44,9 +44,9 @@ const create = async (paises) => {
     paises.pais
   ];
 
-  const row = await db.query(query, params);
+  const [row] = await db.query(query, params);
 
-  return row[0][0];
+  return row[0];
 };
 
 // Actualizar 

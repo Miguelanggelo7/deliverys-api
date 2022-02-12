@@ -59,7 +59,7 @@ router.patch("/cancelar", async (req, res) => {
 });
 
 //solicitar encomienda
-router.patch("/solicitar_encomienda", async (req, res) => {
+router.patch("/solicitar", async (req, res) => {
   const { encomienda_id } = req.body;
   await Encomienda.solicitar(encomienda_id);
   res.json({ message: "Encomienda solicitada" });

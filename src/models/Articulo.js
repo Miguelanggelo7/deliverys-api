@@ -11,34 +11,53 @@ const findAll = async () => {
 
   return rows[0];
 };
-  
+
 // Buscar por id
-const findById = async (id) => {
+const findById = async (idPaquete, idArticulo) => {
   const query = `
     SELECT *
     FROM articulos
-    WHERE id = ?
+    WHERE paquete_id = ?
+    AND articulo_id = ? 
   `;
 
-  const params = [id];
+  const params = [idPaquete, idArticulo];
 
   const rows = await db.query(query, params);
-
-  if (typeof rows[0][0] === "undefined")
-    throw "not-found";
 
   return rows[0][0];
 };
 
-// Crear nueva
-const create = async (articulo) => {
+// Buscar los articulos de un paquete
+const findByPaqueteId = async (paqueteId) => {
   const query = `
-    INSERT INTO articulos
-    (descripcion)
-    VALUES(?)
+    SELECT descripcion
+    FROM articulos
+    WHERE articulo_id = ? 
+    AND paquete_id = ?
   `;
 
-  const params = [articulo.descripcion];
+  const params = [paqueteId];
+
+  const rows = await db.query(query, params);
+
+  return rows[0];
+};
+
+// Crear nueva
+const create = async (articulos) => {
+  const query = `
+    INSERT INTO articulos
+    (articulo_id, paquete_id, cantidad)
+    VALUES(?, ?, ?)
+    RETURNING *
+  `;
+
+  const params = [
+    articulos.articuloId, 
+    articulos.paqueteId,
+    articulos.cantidad
+  ];
 
   const row = await db.query(query, params);
 
@@ -46,33 +65,40 @@ const create = async (articulo) => {
 };
 
 // Actualizar
-const update = async (id, articulo) => {
+const update = async (idPaquete, idArticulo, articulos) => {
   const query = `
     UPDATE articulos
     SET
-    descripcion = ?,
-    WHERE id = ?
+    paquete_id = ?,
+    articulo_id = ?,
+    cantidad = ?
+    WHERE paquete_id = ?
+    AND articulo_id = ? 
   `;
 
-  const params = [articulo.descripcion, id];
+  const params = [
+    articulos.idPaquete, 
+    articulos.idArticulo,
+    articulos.cantidad,
+    idPaquete,
+    idArticulo
+  ];
 
   await db.query(query, params);
 };
 
 // Eliminar
-const deleteArticulo = async (id) => {
+const deleteArticulo = async (paqueteId, articuloId) => {
   const query = `
     DELETE FROM articulos
-    WHERE id = ?
+    WHERE paquete_id = ?
+    AND articulo_id = ?
   `;
 
-  const params = [id];
+  const params = [paqueteId, articuloId];
 
-  const response = await db.query(query, params);
-
-  if (response[0].affectedRows === 0)
-    throw "not-found";
+  await db.query(query, params);
 };
 
-  module.exports = { findAll, findById, create, update  };
+  module.exports = { findAll, findById, create, update, findByPaqueteId  };
   module.exports.delete = deleteArticulo;

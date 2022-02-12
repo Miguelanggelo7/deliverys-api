@@ -25,7 +25,7 @@ router.get("/:encomienda_id/:recorrido_id", async (req, res) => {
 });
 
 // aceptar recorrido
-router.patch("/aceptar-recorrido", async (req, res) => {
+router.patch("/aceptar", async (req, res) => {
   const { encomienda_id, recorrido_id, transportista_id, nucleo_des_id } = req.body;
   const result = await Recorrido
     .aceptarRecorrido(encomienda_id, recorrido_id, transportista_id, nucleo_des_id);
@@ -33,7 +33,7 @@ router.patch("/aceptar-recorrido", async (req, res) => {
 });
 
 // terminar recorrido
-router.patch("/terminar-recorrido", async (req, res) => {
+router.patch("/terminar", async (req, res) => {
   const { encomienda_id, recorrido_id } = req.body;
   const result = await Recorrido
     .terminarRecorrido(encomienda_id, recorrido_id);

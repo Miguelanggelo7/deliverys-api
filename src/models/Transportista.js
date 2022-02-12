@@ -101,6 +101,35 @@ const update = async (id, transportistas) => {
   await db.query(query, params);
 };
 
+const updateDisponibilidad = async (id, disponibilidad) => {
+  const query = `
+    CALL sp_cambiar_disponibilidad(?, ?)
+  `;
+
+  const params = [id, disponibilidad];
+
+  await db.query(query, params);
+}
+
+const createVehiculo = async (id, vehiculo) => {
+  const query = `
+    CALL sp_agregar_vehiculo(?, ?, ?, ?, ?, ?)
+  `;
+
+  const params = [
+    vehiculo.id,
+    id,
+    vehiculo.modelo,
+    vehiculo.marca,
+    vehiculo.color,
+    vehiculo.tipo
+  ];
+
+  const row = await db.query(query, params);
+
+  return row[0][0].shift();
+}
+
 const deleteTransportista = async (id) => {
   const query = `
     DELETE FROM transportistas
@@ -120,6 +149,8 @@ module.exports = {
   findById,
   create,
   update,
+  updateDisponibilidad,
+  createVehiculo
 };
 
 module.exports.delete = deleteTransportista;

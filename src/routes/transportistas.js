@@ -31,6 +31,23 @@ router.put("/:id", async (req, res) => {
   res.json({ message: "Transportista actualizado" });
 });
 
+//Actualizar disponibilidad
+router.put("/:id/disponibilidad", async (req, res) => {
+  const id = req.params.id;
+  const disponibilidad = req.body.disponibilidad;
+  await Transportista.updateDisponibilidad(id, disponibilidad);
+  res.json({ message: "Disponibilidad de Transportista actualizada" });
+});
+
+//Asignar vehiculo a transportista
+// router.post("/:id/vehiculo", async (req, res) => {
+//   const id = req.params.id;
+//   const vehiculo = req.body;
+//   const row = await Transportista.createVehiculo(id, vehiculo);
+//   res.status(201).json(row)
+// });
+
+
 //Borrar
 router.delete("/:id", async (req, res) => {
   const id = req.params.id;

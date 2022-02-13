@@ -11,7 +11,7 @@
  Target Server Version : 100507
  File Encoding         : 65001
 
- Date: 10/02/2022 17:55:36
+ Date: 11/02/2022 02:18:33
 */
 
 SET NAMES utf8mb4;
@@ -33,6 +33,7 @@ CREATE TABLE `articulos`  (
 -- ----------------------------
 -- Records of articulos
 -- ----------------------------
+INSERT INTO `articulos` VALUES (4, 'shampoo', 20);
 
 -- ----------------------------
 -- Table structure for clientes
@@ -56,7 +57,7 @@ CREATE TABLE `clientes`  (
 -- ----------------------------
 -- Records of clientes
 -- ----------------------------
-INSERT INTO `clientes` VALUES ('27123447', 'dsumoza@gmail.com', 'sadaskjadhka', 148.800, 'David', 'Sumoza', '04265971258', NULL, 2);
+INSERT INTO `clientes` VALUES ('27123447', 'dsumoza@gmail.com', 'sadaskjadhka', 143.400, 'David', 'Sumoza', '04265971258', NULL, 2);
 INSERT INTO `clientes` VALUES ('27729212', 'josemsaad13@gmail.com', 'dadasd2112323ddasdas', 62.000, 'Jose', 'Saad', '04249215674', NULL, 2);
 INSERT INTO `clientes` VALUES ('27765316', 'vanessxdl@gmail.com', 'dsdadasdasdasdasdas', 0.000, 'Vanessa', 'Lozano', '04249338629', NULL, 1);
 INSERT INTO `clientes` VALUES ('28301458', 'johanadrex@gmail.com', 'uhasduhasdjbkasdkjbadsas', 0.000, 'Johana', 'Dominguez', '04249331254', '04148521426', 2);
@@ -103,8 +104,8 @@ CREATE TABLE `encomiendas`  (
   `fh_llegada` datetime NULL DEFAULT NULL,
   `estado` varchar(15) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `nucleo_id` int(10) UNSIGNED NOT NULL,
+  `nucleo_rec_id` int(10) UNSIGNED NULL DEFAULT NULL,
   `transportista_id` varchar(9) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
-  `nucleo_rec_id` int(10) NULL DEFAULT NULL,
   `vehiculo_id` varchar(8) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `cliente_env_id` varchar(9) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `cliente_rec_id` varchar(9) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
@@ -112,45 +113,29 @@ CREATE TABLE `encomiendas`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `cliente_envia`(`cliente_env_id`) USING BTREE,
   INDEX `cliente_recibe`(`cliente_rec_id`) USING BTREE,
-  INDEX `tranportista_local`(`transportista_id`) USING BTREE,
-  INDEX `nucleo_local`(`nucleo_id`) USING BTREE,
   INDEX `fk_transportista_vehiculo`(`vehiculo_id`) USING BTREE,
+  INDEX `fk_transportista_id`(`transportista_id`) USING BTREE,
+  INDEX `fk_nucleo_id`(`nucleo_id`) USING BTREE,
+  INDEX `fk_nucleo_rec_id`(`nucleo_rec_id`) USING BTREE,
   CONSTRAINT `cliente_envia` FOREIGN KEY (`cliente_env_id`) REFERENCES `clientes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `cliente_recibe` FOREIGN KEY (`cliente_rec_id`) REFERENCES `clientes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_transportista_vehiculo` FOREIGN KEY (`vehiculo_id`) REFERENCES `vehiculos` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `nucleo_local` FOREIGN KEY (`nucleo_id`) REFERENCES `nucleos` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `tranportista_local` FOREIGN KEY (`transportista_id`) REFERENCES `transportistas` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `fk_transportista_id` FOREIGN KEY (`transportista_id`) REFERENCES `transportistas` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_nucleo_id` FOREIGN KEY (`nucleo_id`) REFERENCES `nucleos` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_nucleo_rec_id` FOREIGN KEY (`nucleo_rec_id`) REFERENCES `nucleos` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of encomiendas
 -- ----------------------------
-INSERT INTO `encomiendas` VALUES ('123ABC', 'normal', NULL, NULL, 'en progreso', 1, '28123999', NULL, 'AB622FE', '27123447', '27729212', 1.00);
-INSERT INTO `encomiendas` VALUES ('232AIF', 'vuelo', '2021-12-13 14:09:18', '2021-12-16 14:09:18', 'culminada', 4, 'J48573221', NULL, NULL, '27729212', 'C03004786', 3.00);
-INSERT INTO `encomiendas` VALUES ('294AOP', 'normal', '2021-12-14 14:09:18', '2021-12-16 14:09:18', 'en progreso', 2, '29412369', NULL, NULL, '29045314', '28471236', 4.00);
-INSERT INTO `encomiendas` VALUES ('563AOS', 'normal', '2021-12-11 14:09:18', '2021-12-11 18:09:18', 'culminada', 2, 'J48573221', NULL, NULL, '27765316', '30453753', 1.00);
-INSERT INTO `encomiendas` VALUES ('652HOS', 'vuelo', '2021-11-01 14:39:40', '2021-11-16 17:00:47', 'en progreso', 4, '29412369', NULL, NULL, '30453753', '30482111', 1.00);
-
--- ----------------------------
--- Table structure for invitaciones
--- ----------------------------
-DROP TABLE IF EXISTS `invitaciones`;
-CREATE TABLE `invitaciones`  (
-  `transportista_id` varchar(9) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `encomienda_id` varchar(7) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `estado` varchar(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`transportista_id`, `encomienda_id`) USING BTREE,
-  INDEX `encomienda_invitada`(`encomienda_id`) USING BTREE,
-  CONSTRAINT `encomienda_invitada` FOREIGN KEY (`encomienda_id`) REFERENCES `encomiendas` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `transportista_invitado` FOREIGN KEY (`transportista_id`) REFERENCES `transportistas` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of invitaciones
--- ----------------------------
-INSERT INTO `invitaciones` VALUES ('28123999', '232AIF', NULL);
-INSERT INTO `invitaciones` VALUES ('28777156', '123ABC', NULL);
-INSERT INTO `invitaciones` VALUES ('28777156', '294AOP', NULL);
+INSERT INTO `encomiendas` VALUES ('123ABC', 'normal', NULL, NULL, 'en progreso', 1, NULL, '28123999', 'AB622FE', '27123447', '27729212', 1.00);
+INSERT INTO `encomiendas` VALUES ('232AIF', 'normal', '2021-12-13 14:09:18', '2021-12-16 14:09:18', 'culminada', 4, NULL, 'J48573221', NULL, '27729212', 'C03004786', 3.00);
+INSERT INTO `encomiendas` VALUES ('245CDF', 'extendida', NULL, NULL, NULL, 1, 2, NULL, NULL, '27123447', '30482111', 0.00);
+INSERT INTO `encomiendas` VALUES ('294AOP', 'normal', '2021-12-14 14:09:18', '2021-12-16 14:09:18', 'en progreso', 2, NULL, '29412369', NULL, '29045314', '28471236', 4.00);
+INSERT INTO `encomiendas` VALUES ('563AOS', 'normal', '2021-12-11 14:09:18', '2021-12-11 18:09:18', 'culminada', 2, NULL, 'J48573221', NULL, '27765316', '30453753', 1.00);
+INSERT INTO `encomiendas` VALUES ('652HOS', 'normal', '2021-11-01 14:39:40', '2021-11-16 17:00:47', 'en progreso', 4, NULL, '29412369', NULL, '30453753', '30482111', 1.00);
+INSERT INTO `encomiendas` VALUES ('999ZZZ', 'extendida', '2022-02-11 02:58:55', '2022-02-11 04:32:57', 'culminada', 1, 2, NULL, NULL, '27123447', '27729212', 0.00);
+INSERT INTO `encomiendas` VALUES ('XXX123', 'extendida', NULL, NULL, 'en espera', 5, 1, NULL, NULL, '27123447', '27729212', 0.00);
 
 -- ----------------------------
 -- Table structure for nucleos
@@ -168,7 +153,7 @@ CREATE TABLE `nucleos`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `direccion_nucleo`(`direccion_id`) USING BTREE,
   CONSTRAINT `direccion_nucleo` FOREIGN KEY (`direccion_id`) REFERENCES `direcciones` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of nucleos
@@ -176,6 +161,7 @@ CREATE TABLE `nucleos`  (
 INSERT INTO `nucleos` VALUES (1, 1, ' S&S Pto. Ordaz Unare', '02869231487', 0.3500, 0.2000, 0.1000, 1.000);
 INSERT INTO `nucleos` VALUES (2, 4, ' S&S El Callao Av. Guarapiche', '02869231288', 0.4000, 0.1500, 0.1000, 0.500);
 INSERT INTO `nucleos` VALUES (4, 5, 'DHL EXPRESS Las Vegas Sunset RD Suite', '18002255345', 0.3500, 0.2500, 0.1500, 0.700);
+INSERT INTO `nucleos` VALUES (5, 6, 'NUCLEO 6', '12313213213', 0.2000, 0.1000, 0.5000, 1.000);
 
 -- ----------------------------
 -- Table structure for paises
@@ -208,16 +194,17 @@ CREATE TABLE `paquetes`  (
   `fragil` tinyint(1) NOT NULL,
   `encomienda_id` varchar(7) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `encomienda_paquete`(`encomienda_id`) USING BTREE,
-  CONSTRAINT `encomienda_paquete` FOREIGN KEY (`encomienda_id`) REFERENCES `encomiendas` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+  INDEX `fk_paquete_encomiendas`(`encomienda_id`) USING BTREE,
+  CONSTRAINT `fk_paquete_encomiendas` FOREIGN KEY (`encomienda_id`) REFERENCES `encomiendas` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of paquetes
 -- ----------------------------
-INSERT INTO `paquetes` VALUES (1, 120.000, 120.00, 120.00, 120.00, 0, '123ABC');
-INSERT INTO `paquetes` VALUES (2, 10.000, 10.00, 10.00, 10.00, 0, '123ABC');
-INSERT INTO `paquetes` VALUES (3, 50.000, 30.00, 30.00, 30.00, 0, '123ABC');
+INSERT INTO `paquetes` VALUES (1, 120.000, 120.00, 120.00, 120.00, 0, '232AIF');
+INSERT INTO `paquetes` VALUES (2, 10.000, 10.00, 10.00, 10.00, 0, '294AOP');
+INSERT INTO `paquetes` VALUES (3, 50.000, 30.00, 30.00, 30.00, 0, '652HOS');
+INSERT INTO `paquetes` VALUES (4, 100.000, 50.00, 50.00, 50.00, 0, '999ZZZ');
 
 -- ----------------------------
 -- Table structure for recargas
@@ -237,6 +224,35 @@ CREATE TABLE `recargas`  (
 INSERT INTO `recargas` VALUES ('27729212', '2021-12-17 02:17:57', 40.000);
 INSERT INTO `recargas` VALUES ('30453753', '2021-12-17 00:04:23', 20.000);
 INSERT INTO `recargas` VALUES ('30453753', '2021-12-17 02:15:04', 10.000);
+
+-- ----------------------------
+-- Table structure for recorridos
+-- ----------------------------
+DROP TABLE IF EXISTS `recorridos`;
+CREATE TABLE `recorridos`  (
+  `id` int(10) UNSIGNED NOT NULL,
+  `encomienda_id` varchar(7) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `nucleo_org_id` int(10) UNSIGNED NOT NULL,
+  `nucleo_des_id` int(10) UNSIGNED NOT NULL,
+  `estado` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'abierto',
+  `transportista_id` varchar(9) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`, `encomienda_id`) USING BTREE,
+  INDEX `fk_recorridos_transportista_id`(`transportista_id`) USING BTREE,
+  INDEX `fk_recorridos_nucleo_org_id`(`nucleo_org_id`) USING BTREE,
+  INDEX `fk_recorridos_nucleo_des_id`(`nucleo_des_id`) USING BTREE,
+  INDEX `fk_recorridos_encomienda_id`(`encomienda_id`) USING BTREE,
+  CONSTRAINT `fk_recorridos_transportista_id` FOREIGN KEY (`transportista_id`) REFERENCES `transportistas` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_recorridos_nucleo_org_id` FOREIGN KEY (`nucleo_org_id`) REFERENCES `nucleos` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_recorridos_nucleo_des_id` FOREIGN KEY (`nucleo_des_id`) REFERENCES `nucleos` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of recorridos
+-- ----------------------------
+INSERT INTO `recorridos` VALUES (0, '999ZZZ', 1, 4, 'culminado', '28123999');
+INSERT INTO `recorridos` VALUES (0, 'XXX123', 5, 1, 'abierto', NULL);
+INSERT INTO `recorridos` VALUES (1, '999ZZZ', 4, 5, 'culminado', 'J48573221');
+INSERT INTO `recorridos` VALUES (2, '999ZZZ', 5, 2, 'culminado', '27506984');
 
 -- ----------------------------
 -- Table structure for transportistas
@@ -269,10 +285,11 @@ CREATE TABLE `transportistas`  (
 -- ----------------------------
 -- Records of transportistas
 -- ----------------------------
-INSERT INTO `transportistas` VALUES ('28123999', 'Freddy', 'Reyes', '04120531528', NULL, 'frezk@gmail.com', 'jihsfadssad8921dsaas2123', 70.240, '210885054681', '2021-12-15', 0, 1, NULL, 1, 1, 1);
-INSERT INTO `transportistas` VALUES ('28777156', 'Carlos', 'Ternera', '04241234451', NULL, 'telnep@gmail.com', 'jihsfdhjsadisladoas2123', 0.000, NULL, '2021-12-15', 0, 1, NULL, 0, 2, 1);
-INSERT INTO `transportistas` VALUES ('29412369', 'Julian', 'Alcachofas', '04125341274', NULL, 'juanalco_1@gmail.com', 'jbhdasnsdnasduhasudhas8d212131dasd', 0.000, '21020856327', '2021-12-16', 0, 0, NULL, 0, 4, 2);
-INSERT INTO `transportistas` VALUES ('J48573221', 'Alisson', 'Blossom', '12123244152', NULL, 'alibloss23@outlook.com', 'diojsadjas10129028', 0.000, 'K12345678', '2021-12-16', 0, 0, NULL, 0, 5, 4);
+INSERT INTO `transportistas` VALUES ('27506984', 'Guss', 'Guti', '45464645456', NULL, 'dfjfrfrfrr', '1234', 5.000, 'K454654458', '2022-02-10', 0, 1, '2022-02-10', 0, 2, 5);
+INSERT INTO `transportistas` VALUES ('28123999', 'Freddy', 'Reyes', '04120531528', NULL, 'frezk@gmail.com', 'jihsfadssad8921dsaas2123', 8.750, '210885054681', '2021-12-15', 0, 1, '2022-02-08', 1, 1, 1);
+INSERT INTO `transportistas` VALUES ('28777156', 'Carlos', 'Ternera', '04241234451', NULL, 'telnep@gmail.com', 'jihsfdhjsadisladoas2123', 0.000, NULL, '2021-12-15', 0, 1, '2022-02-06', 0, 2, 1);
+INSERT INTO `transportistas` VALUES ('29412369', 'Julian', 'Alcachofas', '04125341274', NULL, 'juanalco_1@gmail.com', 'jbhdasnsdnasduhasudhas8d212131dasd', 0.000, '21020856327', '2021-12-16', 0, 1, '2022-02-06', 0, 4, 2);
+INSERT INTO `transportistas` VALUES ('J48573221', 'Alisson', 'Blossom', '12123244152', NULL, 'alibloss23@outlook.com', 'diojsadjas10129028', 17.500, 'K12345678', '2021-12-16', 0, 1, '2022-02-06', 0, 5, 4);
 INSERT INTO `transportistas` VALUES ('J48874112', 'Jhon', 'Lennon', '12123255179', NULL, 'jhonlennon27@gmail.com', 'badjas7982132d', 0.000, 'K12345679', '2021-12-10', 1, 1, '2021-11-10', 0, 5, 4);
 
 -- ----------------------------
@@ -294,27 +311,13 @@ CREATE TABLE `vehiculos`  (
 -- ----------------------------
 -- Records of vehiculos
 -- ----------------------------
+INSERT INTO `vehiculos` VALUES ('A33315', '28123999', 'Explorer 2020', 'Toyota', 'Blanco', 'motor');
+INSERT INTO `vehiculos` VALUES ('A56VDA', '28123999', 'Explorer 2020', 'Toyota', 'Blanco', 'motor');
 INSERT INTO `vehiculos` VALUES ('AB622FE', '28123999', 'M1', 'BMW', 'Rojo', 'motor');
+INSERT INTO `vehiculos` VALUES ('AI41AD5', '28123999', 'Explorer 2020', 'Toyota', 'Blanco', 'motor');
 INSERT INTO `vehiculos` VALUES ('BC123AC', '28777156', 'Urbana', 'Scott', 'Gris', 'bicicleta');
 INSERT INTO `vehiculos` VALUES ('DE947KD', '29412369', '166', 'Ferrari', 'Azul', 'motor');
 INSERT INTO `vehiculos` VALUES ('KL382JD', 'J48573221', 'Caviar', 'Tesla', 'Negro', 'motor');
-
--- ----------------------------
--- Table structure for viajes
--- ----------------------------
-DROP TABLE IF EXISTS `viajes`;
-CREATE TABLE `viajes`  (
-  `vuelo_id` varchar(8) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `encomienda_id` varchar(7) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  PRIMARY KEY (`vuelo_id`, `encomienda_id`) USING BTREE,
-  INDEX `carga`(`encomienda_id`) USING BTREE,
-  CONSTRAINT `carga` FOREIGN KEY (`encomienda_id`) REFERENCES `encomiendas` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `viaja_en` FOREIGN KEY (`vuelo_id`) REFERENCES `vuelos` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of viajes
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for vuelos
@@ -328,13 +331,16 @@ CREATE TABLE `vuelos`  (
   `fh_salida` datetime NOT NULL,
   `fh_llegada` datetime NULL DEFAULT NULL,
   `aerolinea` varchar(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+  `encomienda_id` varchar(7) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `recorrido_id` int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `fk_recorridos_encomienda_id_recorrido_id`(`encomienda_id`, `recorrido_id`) USING BTREE,
+  CONSTRAINT `fk_recorridos_encomienda_id_recorrido_id` FOREIGN KEY (`encomienda_id`, `recorrido_id`) REFERENCES `recorridos` (`encomienda_id`, `id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of vuelos
 -- ----------------------------
-INSERT INTO `vuelos` VALUES ('22OK', NULL, NULL, '02:09:18', '2021-12-17 17:39:40', NULL, 'Conviasa');
 
 -- ----------------------------
 -- Function structure for sf_calcular_costo_encomienda
@@ -419,6 +425,57 @@ BEGIN
 	AND encomienda_id = _encomienda_id;
 	
 END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_aceptar_recorrido
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_aceptar_recorrido`;
+delimiter ;;
+CREATE PROCEDURE `sp_aceptar_recorrido`(_encomienda_id VARCHAR(7),
+    _recorrido_id INT(10),
+    _transportista_id VARCHAR(9),
+    _nucleo_des_id INT(10))
+BEGIN
+
+    IF (
+        SELECT estado <> 'abierto'
+        FROM recorridos
+        WHERE encomienda_id = _encomienda_id
+        AND id = _recorrido_id
+    )
+    THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '(sp_aceptar_recorrido) Error: el recorrido no esta disponible';
+    END IF;
+    
+    UPDATE recorridos
+        SET transportista_id = _transportista_id,
+            nucleo_des_id = _nucleo_des_id,
+            estado = 'cerrado'
+        WHERE encomienda_id = _encomienda_id
+        AND id = _recorrido_id;
+    
+    IF (
+        SELECT estado
+        FROM encomiendas
+        WHERE id = _encomienda_id
+    ) = 'en espera'
+    THEN
+        CALL sp_update_estado(_encomienda_id, _transportista_id, NULL);
+    END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_agregar_vehiculo
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_vehiculo`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_vehiculo`()
+
 ;;
 delimiter ;
 
@@ -514,6 +571,50 @@ BEGIN
 	
 	INSERT INTO invitaciones(transportista_id, encomienda_id) VALUES(_transportista_id, _encomienda_id);
 	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_pagar_encomienda_extendida_transportistas
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_pagar_encomienda_extendida_transportistas`;
+delimiter ;;
+CREATE PROCEDURE `sp_pagar_encomienda_extendida_transportistas`(_encomienda_id VARCHAR(7))
+BEGIN
+	DECLARE _transportista_id VARCHAR(9);
+
+	DECLARE finished INTEGER DEFAULT 0;
+	DECLARE comision FLOAT(255,2);
+
+
+	DECLARE curTransportista CURSOR FOR 
+			SELECT transportista_id
+			FROM recorridos
+			WHERE encomienda_id = _encomienda_id;
+
+	DECLARE CONTINUE HANDLER 
+        FOR NOT FOUND SET finished = 1;
+
+	OPEN curTransportista;
+	
+	WHILE !finished DO
+		FETCH curTransportista INTO _transportista_id;
+
+		SELECT n.com_vuelo
+		INTO comision
+		FROM transportistas t
+		INNER JOIN nucleos n ON n.id = t.nucleo_id
+		WHERE t.id = _transportista_id;
+
+		UPDATE transportistas t
+		SET t.saldo = t.saldo + sf_calcular_costo_encomienda(_encomienda_id) 
+			* comision
+		WHERE id = _transportista_id;
+	END WHILE;
+
+	CLOSE curTransportista;
+
 END
 ;;
 delimiter ;
@@ -629,6 +730,74 @@ END
 delimiter ;
 
 -- ----------------------------
+-- Procedure structure for sp_terminar_recorrido
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_terminar_recorrido`;
+delimiter ;;
+CREATE PROCEDURE `sp_terminar_recorrido`(_encomienda_id VARCHAR(7),
+    _recorrido_id INT(10))
+BEGIN
+    DECLARE _transportista_id VARCHAR(9);
+    DECLARE is_same_destiny int;
+    DECLARE newOrigin int(10);
+    DECLARE newDestiny int(10);
+
+    IF (
+        SELECT estado = 'abierto' OR estado = 'culminado'
+        FROM recorridos
+        WHERE encomienda_id = _encomienda_id
+        AND id = _recorrido_id
+    )
+    THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '(sp_terminar_recorrido) Error: el recorrido no se pude terminar';
+    END IF;
+
+    UPDATE recorridos
+        SET estado = 'culminado'
+        WHERE encomienda_id = _encomienda_id
+        AND id = _recorrido_id;
+
+    SELECT e.nucleo_rec_id = r.nucleo_des_id
+        INTO is_same_destiny
+        FROM encomiendas e
+        INNER JOIN recorridos r ON r.encomienda_id = e.id
+            AND r.id = _recorrido_id
+        WHERE e.id = _encomienda_id;
+    IF is_same_destiny THEN
+
+        SELECT transportista_id
+            INTO _transportista_id
+            FROM recorridos
+            WHERE encomienda_id = _encomienda_id
+            AND id = (
+                SELECT MAX(id) 
+                FROM recorridos
+                WHERE encomienda_id = _encomienda_id
+            );
+
+        CALL sp_update_estado(_encomienda_id, _transportista_id, NULL);
+
+    ELSE
+        SELECT nucleo_des_id
+        INTO newOrigin
+        FROM recorridos
+        WHERE encomienda_id = _encomienda_id
+        AND id = _recorrido_id;
+
+        SELECT nucleo_rec_id
+        INTO newDestiny
+        FROM encomiendas
+        WHERE id = _encomienda_id;
+
+        INSERT INTO recorridos (id, encomienda_id, nucleo_org_id, nucleo_des_id)
+            VALUES (_recorrido_id + 1, _encomienda_id, newOrigin, newDestiny);
+    END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
 -- Procedure structure for sp_update_estado
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_update_estado`;
@@ -639,12 +808,38 @@ CREATE PROCEDURE `sp_update_estado`(encomienda VARCHAR(7),
 BEGIN
 
 	DECLARE oldEstado VARCHAR(15);
+
+	DECLARE _tipo VARCHAR(15);
+
+	SELECT tipo
+	INTO _tipo
+	FROM encomiendas
+	WHERE id = encomienda;
 	
 	IF transportista <=> NULL
 		OR encomienda <=> NULL
-		OR !(transportista <=> (SELECT transportista_id
-									FROM encomiendas
-									WHERE id = encomienda)) THEN
+		OR (
+			_tipo = 'normal'
+			AND transportista <> (
+				SELECT transportista_id
+				FROM encomiendas
+				WHERE id = encomienda
+			)
+		)
+		OR (
+			_tipo = 'extendida'
+			AND transportista NOT IN (
+				SELECT transportista_id
+				FROM recorridos
+				WHERE encomienda_id = encomienda
+				AND id = (
+					SELECT MAX(id) 
+					FROM recorridos
+					WHERE encomienda_id = encomienda
+            	)
+			)
+		)
+	THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '(sp_update_estado) Error: el transportista o encomienda ingresada no es valida';
 	
@@ -658,23 +853,21 @@ BEGIN
 		FROM encomiendas
 		WHERE id = encomienda;
 
-		CASE oldEstado
-		
-			WHEN NULL THEN
-			
-				SIGNAL SQLSTATE '45000'
+		IF oldEstado <=> NULL THEN
+			SIGNAL SQLSTATE '45000'
 				SET MESSAGE_TEXT = '(sp_update_estado) Error: la encomienda no ha sido iniciada, su estado no se puede actualizar';
+		END IF;
+
+		CASE oldEstado
 		
 			WHEN 'en espera' THEN
 
 				SET newEstado = 'en progreso';
-				
-				-- Registrar fecha de salida
+
 				UPDATE encomiendas
 					SET fh_salida = NOW()
 					WHERE id = encomienda;
-				
-				-- cobrarle al cliente
+
 				CALL sp_cobrar_encomienda_cliente(encomienda);
 				
 			WHEN 'en custodia'  THEN
@@ -684,17 +877,24 @@ BEGIN
 			WHEN 'en progreso'  THEN
 			
 				SET newEstado = 'culminada';
-				
-				-- Registrar fecha de llegada
+
 				UPDATE encomiendas
 					SET fh_llegada = NOW()
 					WHERE id = encomienda;
-				
-				-- pagarle al transportista
-				CALL sp_pagar_encomienda_transportista(encomienda);
+
+
+				IF (
+					SELECT tipo
+					FROM encomiendas
+					WHERE id = encomienda
+				) = 'normal'
+				THEN
+					CALL sp_pagar_encomienda_transportista(encomienda);
+				ELSE
+					CALL sp_pagar_encomienda_extendida_transportistas(encomienda);
+				END IF;
 				
 			ELSE 
-			
 				SET newEstado = oldEstado;
 				
 		END CASE;
@@ -728,6 +928,35 @@ delimiter ;
 -- ----------------------------
 -- Triggers structure for table encomiendas
 -- ----------------------------
+DROP TRIGGER IF EXISTS `tg_before_encomiendas_insert_estado`;
+delimiter ;;
+CREATE TRIGGER `tg_before_encomiendas_insert_estado` BEFORE INSERT ON `encomiendas` FOR EACH ROW BEGIN
+    IF NEW.tipo = 'extendida' THEN
+        SET NEW.estado = 'en espera';
+                
+    END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table encomiendas
+-- ----------------------------
+DROP TRIGGER IF EXISTS `tg_after_encomiendas_insert_publicar_recorrido`;
+delimiter ;;
+CREATE TRIGGER `tg_after_encomiendas_insert_publicar_recorrido` AFTER INSERT ON `encomiendas` FOR EACH ROW BEGIN
+    IF NEW.tipo = 'extendida' THEN
+        INSERT INTO recorridos (id, encomienda_id, nucleo_org_id, nucleo_des_id)
+            VALUES (0, NEW.id, NEW.nucleo_id, NEW.nucleo_rec_id);
+                
+    END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table encomiendas
+-- ----------------------------
 DROP TRIGGER IF EXISTS `tg_CHK_vehiculo_id`;
 delimiter ;;
 CREATE TRIGGER `tg_CHK_vehiculo_id` BEFORE UPDATE ON `encomiendas` FOR EACH ROW BEGIN
@@ -739,6 +968,27 @@ CREATE TRIGGER `tg_CHK_vehiculo_id` BEFORE UPDATE ON `encomiendas` FOR EACH ROW 
     THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Error: el transportista es NULL o el vehiculo no pertenece al transportista';
+    END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table recorridos
+-- ----------------------------
+DROP TRIGGER IF EXISTS `tg_chk_recorrido_transportista`;
+delimiter ;;
+CREATE TRIGGER `tg_chk_recorrido_transportista` BEFORE UPDATE ON `recorridos` FOR EACH ROW BEGIN
+	IF !(OLD.transportista_id <=> NEW.transportista_id)
+		AND (
+			SELECT nucleo_id
+			FROM transportistas
+			WHERE id = NEW.transportista_id
+		) <> NEW.nucleo_org_id
+    THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '(tg_chk_recorrido_transportista) Error: el transportista 
+			no pertenece al nucleo de origen del recorrido';
     END IF;
 END
 ;;

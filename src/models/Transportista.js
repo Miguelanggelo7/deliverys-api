@@ -31,9 +31,9 @@ const findById =  async (id) => {
 const create = async (transportistas) => {
   const query = `
     INSERT INTO transportistas
-    (id, nombre, apellido, telefono, alt_telefono, email, password, saldo, licencia, fecha_ingreso, disponibilidad, curso_aprobado, f_curso, antecedentes, direccion_id, nucleo_id)
-    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?) 
-    RETURNING *
+    (id, nombre, apellido, telefono, alt_telefono, email, password, licencia, fecha_ingreso, antecedentes, direccion_id, nucleo_id)
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?) 
+
   `;
 
   const params = [
@@ -44,17 +44,15 @@ const create = async (transportistas) => {
     transportistas.alt_telefono,
     transportistas.email,
     transportistas.password,
-    transportistas.saldo,
     transportistas.licencia,
-    transportistas.disponibilidad,
-    transportistas.curso_aprobado,
-    transportistas.f_curso,
     transportistas.antecedentes,
     transportistas.direccion_id,
     transportistas.nucleo_id
   ];
 
   await db.query(query, params);
+
+  return transportistas.id;
 };
 
 const update = async (id, transportistas) => {
@@ -144,13 +142,35 @@ const deleteTransportista = async (id) => {
     throw "not-found";
 };
 
+const login = async (email, password) => {
+  
+  const query = `
+    SELECT id, password = ? as is_password_correct
+    FROM transportistas
+    WHERE email = ?
+  `
+  const params = [password, email];
+  const response = await db.query(query, params);
+
+  if (response[0].length === 0){
+    throw "not-found";
+  }
+  
+  return {
+    is_password_correct: response[0][0].is_password_correct === 1,
+    id: response[0][0].id
+  };
+  
+}
+
 module.exports = {
   findAll,
   findById,
   create,
   update,
   updateDisponibilidad,
-  createVehiculo
+  createVehiculo,
+  login
 };
 
 module.exports.delete = deleteTransportista;

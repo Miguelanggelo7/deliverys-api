@@ -17,9 +17,12 @@ router.get("/:id", async (req, res) => {
 });
 
 // Crear cliente
-router.post("/", async (req, res) => {
-  const row = await Cliente.create(req.body);
-  res.status(201).json(row);
+router.post("/singup", async (req, res) => {
+  const id = await Cliente.create(req.body);
+  res.status(201).json({
+    msg: 'Usuario creado con exito',
+    'id': id
+  });
 });
 
 // Actualizar cliente
@@ -34,6 +37,22 @@ router.delete("/:id", async (req, res) => {
   const id = req.params.id;
   await Cliente.delete(id);
   res.json({ message: `Cliente con id ${id} ha sido eliminado` });
+});
+
+router.patch('/login', async (req, res) => {
+  const {email, password} = req.body;
+  const response = await Cliente.login(email, password);
+  if (response.is_password_correct) {
+    res.status(200).json({
+      msg: `Ha iniciado sesion con exito`,
+      id: response.id
+    });
+  }else{
+    res.status(400).json({
+      msg: 'El password es incorrecto'
+    });
+  }
+  
 });
 
 module.exports = router;

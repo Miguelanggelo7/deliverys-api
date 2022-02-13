@@ -33,16 +33,14 @@ const findById =  async (id) => {
 const create = async (cliente) => {
   const query = `
     INSERT INTO clientes
-    (id, email, password, saldo, nombre, apellido, telefono, alt_telefono, direccion_id)
-    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) 
-    RETURNING *
+    (id, email, password, nombre, apellido, telefono, alt_telefono, direccion_id)
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   const params = [
     cliente.id,
     cliente.email,
     cliente.password,
-    cliente.saldo,
     cliente.nombre,
     cliente.apellido,
     cliente.telefono,
@@ -50,9 +48,9 @@ const create = async (cliente) => {
     cliente.direccion_id,
   ];
 
-  const row = await db.query(query, params);
+  await db.query(query, params);
 
-  return row;
+  return cliente.id;
 };
 
 const update = async (id, cliente) => {
@@ -101,11 +99,33 @@ const deleteCliente = async (id) => {
     throw "not-found";
 };
 
+const login = async (email, password) => {
+  
+  const query = `
+    SELECT id, password = ? as is_password_correct
+    FROM clientes
+    WHERE email = ?
+  `
+  const params = [password, email];
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0){
+    throw "not-found";
+  }
+
+  return {
+    is_password_correct: response[0][0].is_password_correct === 1,
+    id: response[0][0].id
+  };
+  
+}
+
 module.exports = {
   findAll,
   findById,
   create,
   update,
+  login,
 };
 
 module.exports.delete = deleteCliente;

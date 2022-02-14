@@ -4,6 +4,15 @@ CREATE PROCEDURE sp_solicitar_encomienda(
 	encomienda VARCHAR(7)
 )
 BEGIN
+
+	IF (
+		SELECT COUNT(*) = 0
+		FROM paquetes
+		WHERE encomienda_id = encomienda
+	) THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '(sp_solicitar_encomienda) Error: la encomienda no posee ningun paquete';
+	END IF;
 	
 	IF !((SELECT estado
 			FROM encomiendas

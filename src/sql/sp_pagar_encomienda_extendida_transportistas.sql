@@ -8,6 +8,7 @@ BEGIN
 
 	DECLARE finished INTEGER DEFAULT 0;
 	DECLARE comision FLOAT(255,2);
+	-- DECLARE n INT;
 
 	-- declarar cursor de todos los transportistas
 	-- que participaron en la ecomienda
@@ -22,8 +23,10 @@ BEGIN
 
 	OPEN curTransportista;
 	
+	-- SET n = 0;
+
+	FETCH curTransportista INTO _transportista_id;
 	WHILE !finished DO
-		FETCH curTransportista INTO _transportista_id;
 
 		-- calcular comision de cada transportista segun su nucleo
 		SELECT n.com_vuelo
@@ -37,9 +40,16 @@ BEGIN
 		SET t.saldo = t.saldo + sf_calcular_costo_encomienda(_encomienda_id) 
 			* comision
 		WHERE id = _transportista_id;
+
+		-- SET n = n + 1;
+
+		FETCH curTransportista INTO _transportista_id;
 	END WHILE;
 	
 	-- close cursor
 	CLOSE curTransportista;
+
+	-- SIGNAL SQLSTATE '45000'
+	-- SET MESSAGE_TEXT = n;
 
 END;

@@ -1,43 +1,42 @@
 const Router = require("express-promise-router");
-const db = require("../db");
-const Nucleo = require("../models/Nucleo");
+const Vehiculo = require("../models/Vehiculo");
 
 const router = new Router();
 
 // Obtener todos 
 router.get("/", async (req, res) => {
-  const rows = await Nucleo.findAll();
+  const rows = await Vehiculo.findAll();
   res.json(rows);
 });
 
 // Obtener uno por su id
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
-  const row = await Nucleo.findById(id);
+  const row = await Vehiculo.findById(id);
   res.json(row);
 });
 
-// Crear 
+// Crear Vehiculo
 router.post("/", async (req, res) => {
-  const id = await Nucleo.create(req.body);
+  const vehiculo = await Vehiculo.create(req.body);
   res.status(201).json({
-    msg: 'Nucleo creado con exito',
-    'id': id
+    msg: 'Vehiculo creado con exito',
+    'vehiculo': vehiculo
   });
 });
 
-// Actualizar 
+// Actualizar Vehiculo
 router.put("/:id", async (req, res) => {
   const id = req.params.id;
-  await Nucleo.update(id, req.body);
-  res.json({ message: "Nucleo actualizado" });
+  await Vehiculo.update(id, req.body);
+  res.json({ message: "Vehiculo actualizado" });
 });
 
-// Eliminar 
+// Eliminar Vehiculo
 router.delete("/:id", async (req, res) => {
   const id = req.params.id;
-  await Nucleo.delete(id);
-  res.json({ message: `Nucleo con id ${id} ha sido eliminado` });
+  await Vehiculo.delete(id);
+  res.json({ message: `Vehiculo con id ${id} ha sido eliminado` });
 });
 
 module.exports = router;

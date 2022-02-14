@@ -1,0 +1,171 @@
+{
+    "NUCLEOS": {
+
+        "direccion_id": 1, 
+        "nombre": "Nuevo nucleo", 
+        "telefono": "04120899879", 
+        "com_vuelo": 0.30, 
+        "com_vehiculo_motor": 0.30, 
+        "com_bicicleta": 0.30,
+        "precio_por_kg": 1
+
+    },
+    
+    "TRANSPORTISTA": {
+
+        "email": "jags2@gmail.com",
+        "password": "123",
+        "id": "27506981",
+        "nombre": "Jesus",
+        "apellido": "Gutierrez",
+        "telefono": "04120899879", 
+        "alt_telefono": null,
+        "direccion_id": 1,
+        "licencia": "ASFFEF8",
+        "antecedentes": 0,
+        "nucleo_id": 1
+
+    },
+
+    "VEHICULO": {
+
+        "id": "JFEI45",
+        "transportista_id": "27506984",
+        "modelo": "convertible",
+        "marca": "toyota",
+        "color": "negro",
+        "tipo": "motor"
+
+    },
+
+    "CLIENTES": {
+        
+        "email": "jags2@gmail.com",
+        "password": "123",
+        "id": "27506981",
+        "nombre": "Jesus",
+        "apellido": "Gutierrez",
+        "telefono": "04120899879", 
+        "alt_telefono": null,
+        "direccion_id": 1
+
+    },
+
+    "ENCOMIENDAS NORMALES" : {
+        "encomienda": {
+            "tipo": "normal",
+            "nucleo_id": 1,
+            "nucleo_rec_id": null,
+            "transportista_id": "27506984",
+            "vehiculo_id": "GGGGG",
+            "cliente_rec_id": "27123447",
+            "cliente_env_id": "27506980"
+        },
+        "paquetes": [
+            {
+                "peso": 10,
+                "alto": 10,
+                "ancho": 10,
+                "largo": 10,
+                "fragil": false,
+                "articulos": [
+                    {
+                        "descripcion": "pasta",
+                        "cantidad": 1
+                    },
+                    {
+                        "descripcion": "arroz",
+                        "cantidad": 2
+                    }
+                ]
+            },
+            {
+                "peso": 20,
+                "alto": 20,
+                "ancho": 20,
+                "largo": 20,
+                "fragil": false,
+                "articulos": [
+                    {
+                        "descripcion": "harina",
+                        "cantidad": 5
+                    },
+                    {
+                        "descripcion": "margarina",
+                        "cantidad": 4
+                    }
+                ]
+            }
+        ]
+    },
+
+    "ACEPTAR INVITACION": {
+
+        "encomienda_id": "J4012", 
+        "transportista_id": "28777156",
+        "vehiculo_id": "BC123AC"
+
+    },
+
+
+    "ENCOMIENDAS EXTENDIDAS" : {
+        "encomienda": {
+            "tipo": "extendida",
+            "nucleo_id": 1,
+            "nucleo_rec_id": 5,
+            "transportista_id": null,
+            "vehiculo_id": null,
+            "cliente_rec_id": "27123447",
+            "cliente_env_id": "27506980"
+        },
+        "paquetes": [
+            {
+                "peso": 10,
+                "alto": 10,
+                "ancho": 10,
+                "largo": 10,
+                "fragil": false,
+                "articulos": [
+                    {
+                        "descripcion": "malta",
+                        "cantidad": 1
+                    },
+                    {
+                        "descripcion": "pepsi",
+                        "cantidad": 2
+                    }
+                ]
+            },
+            {
+                "peso": 20,
+                "alto": 20,
+                "ancho": 20,
+                "largo": 20,
+                "fragil": false,
+                "articulos": [
+                    {
+                        "descripcion": "kolita",
+                        "cantidad": 5
+                    },
+                    {
+                        "descripcion": "coca-cola",
+                        "cantidad": 4
+                    }
+                ]
+            }
+        ]
+    },
+
+    "RECORRIDOS ACEPTAR": {
+
+        "encomienda_id": "000000A", 
+        "recorrido_id": 0, 
+        "transportista_id": "27506985", 
+        "nucleo_des_id": "1"
+        
+    }
+
+    
+}
+
+

@@ -18,6 +18,12 @@ router.get("/:id", async (req, res) => {
   res.json(transportista);
 });
 
+router.get('/encomienda/:id', async (req, res) => {
+  const id = req.params.id;
+  const transportista = await Transportista.findByEncomienda(id);
+  res.json(transportista);
+});
+
 //Crear uno
 router.post("/singup", async (req, res) => {
   const id = await Transportista.create(req.body);
@@ -42,14 +48,6 @@ router.put("/:id/disponibilidad", async (req, res) => {
   res.json({ message: "Disponibilidad de Transportista actualizada" });
 });
 
-//Asignar vehiculo a transportista
-// router.post("/:id/vehiculo", async (req, res) => {
-//   const id = req.params.id;
-//   const vehiculo = req.body;
-//   const row = await Transportista.createVehiculo(id, vehiculo);
-//   res.status(201).json(row)
-// });
-
 
 //Borrar
 router.delete("/:id", async (req, res) => {
@@ -72,6 +70,12 @@ router.patch('/login', async (req, res) => {
     });
   }
   
+});
+
+router.patch('/retirar-saldo', async (req, res) => {
+  const {id, monto} = req.body;
+  const saldo = await Transportista.retirarSaldo(id, monto);
+  res.status(200).json({msg: `Se ha retirado su saldo con exito, ahora posee ${saldo}`});
 });
 
 module.exports = router;

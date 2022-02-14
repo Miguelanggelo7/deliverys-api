@@ -1,5 +1,5 @@
 const res = require("express/lib/response");
-const db = require("../db");
+const db = require('../db');
 
 // Buscar todas las direcciones
 const findAll = async () => {

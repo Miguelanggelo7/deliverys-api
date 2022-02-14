@@ -77,6 +77,8 @@ BEGIN
 				SET newEstado = 'en progreso';
 				
 			WHEN 'en progreso'  THEN
+
+
 			
 				SET newEstado = 'culminada';
 				
@@ -97,7 +99,15 @@ BEGIN
 				ELSE
 					CALL sp_pagar_encomienda_extendida_transportistas(encomienda);
 				END IF;
-				
+
+				UPDATE encomiendas
+				SET precio = sf_calcular_costo_encomienda(encomienda)
+				WHERE id = encomienda;
+
+				UPDATE paquetes
+				SET precio = sf_calcular_costo_paquete(id)
+				WHERE encomienda_id = encomienda;
+
 			ELSE 
 				SET newEstado = oldEstado;
 				

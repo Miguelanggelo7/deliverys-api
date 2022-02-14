@@ -1,4 +1,5 @@
-const db = require("../db");
+const db = require('../db');
+
 
 // Obtener todos los clientes
 const findAll = async () => {
@@ -29,6 +30,25 @@ const findById =  async (id) => {
 
   return rows[0][0];
 };
+
+const findByEncomienda = async (encomienda) => {
+
+  const query = `
+    SELECT *
+    FROM vw_clientes_for_transportistas
+    WHERE encomienda = ?
+  `;
+
+  const params = [encomienda];
+
+  const rows = await db.query(query, params);
+
+  if (typeof rows[0] === "undefined")
+    throw "not-found";
+
+
+  return rows[0];
+}
 
 const create = async (cliente) => {
   const query = `
@@ -120,12 +140,28 @@ const login = async (email, password) => {
   
 }
 
+const recargarSaldo = async (id, monto) => {
+  const query = `
+    SELECT sf_recargar_saldo_cliente(?,?) as saldo
+  `
+  const params = [id, monto];
+  const response = await db.query(query, params);
+  console.log(response);
+  if (!response[0][0].saldo){
+    throw "not-found";
+  }
+
+  return response[0][0].saldo;
+}
+
 module.exports = {
   findAll,
   findById,
   create,
   update,
   login,
+  recargarSaldo,
+  findByEncomienda
 };
 
 module.exports.delete = deleteCliente;

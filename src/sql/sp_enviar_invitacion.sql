@@ -60,6 +60,7 @@ BEGIN
 	-- close cursor
 	CLOSE curTransportista;
 	
-	INSERT INTO invitaciones(transportista_id, encomienda_id) VALUES(_transportista_id, _encomienda_id);
+	INSERT INTO invitaciones(transportista_id, encomienda_id, fecha_hora) 
+		VALUES(_transportista_id, _encomienda_id, NOW());
 	
 END

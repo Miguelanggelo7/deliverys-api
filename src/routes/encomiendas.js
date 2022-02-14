@@ -21,8 +21,8 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   const paquetes = req.body.paquetes;
   const encomienda = req.body.encomienda;
-  const row = await Encomienda.create(paquetes, encomienda);
-  res.status(201).json(row);
+  const id = await Encomienda.create(paquetes, encomienda);
+  res.status(201).json({ msg: "Encomienda creada", id });
 });
 
 // Actualizar 
@@ -40,30 +40,30 @@ router.delete("/:id", async (req, res) => {
 });
 
 //Actualizar estado de encomienda
-router.patch('/update-estado', async (req, res) => {
+router.patch('/actualizar-estado', async (req, res) => {
   const {encomienda_id, transportista_id} = req.body;
-  await Encomienda.updateEstadoEncomienda(encomienda_id, transportista_id, null);
+  await Encomienda.updateEstado(encomienda_id, transportista_id, null);
   res.json({ message: "Encomienda actualizada" });
 });
 
 //Poner encomienda en custodia
 router.patch("/en-custodia", async (req, res) => {
   const {encomienda_id, transportista_id} = req.body;
-  await Encomienda.updateEstadoEncomienda(encomienda_id, transportista_id, 'en custodia');
+  await Encomienda.updateEstado(encomienda_id, transportista_id, 'en custodia');
   res.json({ message: "Encomienda actualizada" });
 });
 
 //cancelar encomienda
 router.patch("/cancelar", async (req, res) => {
   const {encomienda_id, transportista_id} = req.body;
-  await Encomienda.updateEstadoEncomienda(encomienda_id, transportista_id, 'cancelada');
+  await Encomienda.updateEstado(encomienda_id, transportista_id, 'cancelada');
   res.json({ message: "Encomienda actualizada" });
 });
 
 //solicitar encomienda
 router.patch("/solicitar", async (req, res) => {
-  const { encomienda_id } = req.body;
-  await Encomienda.solicitar(encomienda_id);
+  const { id } = req.body;
+  await Encomienda.solicitar(id);
   res.json({ message: "Encomienda solicitada" });
 });
 

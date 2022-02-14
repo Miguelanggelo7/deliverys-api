@@ -5,7 +5,8 @@ const main = () => {
   app.listen(app.get("port"), async () => {
     console.log(`Server listening on port ${app.get("port")}`);
     const con = await db.getConnection();
-    console.log(`Connected to ${con.config.database}`)
+    console.log(`Connected to DB: ${con.config.database} ` + 
+      `with USER: ${con.config.user}`)
   })
 };
 

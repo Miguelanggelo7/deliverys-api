@@ -1,3 +1,4 @@
+
 DROP FUNCTION IF EXISTS sf_calcular_costo_encomienda;
 
 CREATE FUNCTION sf_calcular_costo_encomienda(
@@ -17,3 +18,4 @@ BEGIN
 	RETURN total;
 
 END;
+

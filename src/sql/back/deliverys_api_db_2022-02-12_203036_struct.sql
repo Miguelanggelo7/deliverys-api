@@ -12,7 +12,7 @@ CREATE TABLE `articulos` (
   `cantidad` int(10) unsigned NOT NULL,
   PRIMARY KEY (`descripcion`,`paquete_id`),
   KEY `paquete_contiene` (`paquete_id`),
-  CONSTRAINT `paquete_contiene` FOREIGN KEY (`paquete_id`) REFERENCES `paquetes` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `paquete_contiene` FOREIGN KEY (`paquete_id`) REFERENCES `paquetes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS clientes;
@@ -20,13 +20,14 @@ CREATE TABLE `clientes` (
   `id` varchar(9) NOT NULL,
   `email` varchar(40) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `saldo` decimal(14,3) unsigned NOT NULL,
+  `saldo` decimal(14,3) unsigned NOT NULL DEFAULT '0.000',
   `nombre` varchar(16) NOT NULL,
   `apellido` varchar(16) NOT NULL,
   `telefono` varchar(11) NOT NULL,
   `alt_telefono` varchar(11) DEFAULT NULL,
   `direccion_id` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_email_clientes` (`email`),
   KEY `direccion_cliente` (`direccion_id`),
   CONSTRAINT `direccion_cliente` FOREIGN KEY (`direccion_id`) REFERENCES `direcciones` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -82,7 +83,7 @@ CREATE TABLE `historico_clientes` (
   PRIMARY KEY (`id`),
   KEY `fk_cliente_historico` (`cliente_id`),
   CONSTRAINT `fk_cliente_historico` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS historico_transportistas;
 CREATE TABLE `historico_transportistas` (
@@ -94,16 +95,16 @@ CREATE TABLE `historico_transportistas` (
   PRIMARY KEY (`id`),
   KEY `fk_transportistas_historico` (`transportista_id`),
   CONSTRAINT `fk_transportistas_historico` FOREIGN KEY (`transportista_id`) REFERENCES `transportistas` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS invitaciones;
 CREATE TABLE `invitaciones` (
   `transportista_id` varchar(9) NOT NULL,
   `encomienda_id` varchar(7) NOT NULL,
-  `estado` varchar(15) NOT NULL,
+  `estado` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`transportista_id`,`encomienda_id`),
   KEY `fk_invitaciones_encomienda_id` (`encomienda_id`),
-  CONSTRAINT `fk_invitaciones_encomienda_id` FOREIGN KEY (`encomienda_id`) REFERENCES `encomiendas` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_invitaciones_encomienda_id` FOREIGN KEY (`encomienda_id`) REFERENCES `encomiendas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_invitaciones_transportistas_id` FOREIGN KEY (`transportista_id`) REFERENCES `transportistas` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -113,14 +114,14 @@ CREATE TABLE `nucleos` (
   `direccion_id` int(10) unsigned NOT NULL,
   `nombre` varchar(255) NOT NULL,
   `telefono` varchar(11) NOT NULL,
-  `com_vuelo` decimal(5,4) DEFAULT NULL,
-  `com_vehiculo_motor` decimal(5,4) DEFAULT NULL,
-  `com_bicicleta` decimal(5,4) DEFAULT NULL,
-  `precio_por_kg` decimal(10,3) DEFAULT NULL,
+  `com_vuelo` decimal(5,4) NOT NULL,
+  `com_vehiculo_motor` decimal(5,4) NOT NULL,
+  `com_bicicleta` decimal(5,4) NOT NULL,
+  `precio_por_kg` decimal(10,3) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `direccion_nucleo` (`direccion_id`),
   CONSTRAINT `direccion_nucleo` FOREIGN KEY (`direccion_id`) REFERENCES `direcciones` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS paises;
 CREATE TABLE `paises` (
@@ -140,8 +141,8 @@ CREATE TABLE `paquetes` (
   `encomienda_id` varchar(7) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_paquete_encomiendas` (`encomienda_id`),
-  CONSTRAINT `fk_paquete_encomiendas` FOREIGN KEY (`encomienda_id`) REFERENCES `encomiendas` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=latin1;
+  CONSTRAINT `fk_paquete_encomiendas` FOREIGN KEY (`encomienda_id`) REFERENCES `encomiendas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS recorridos;
 CREATE TABLE `recorridos` (
@@ -156,6 +157,7 @@ CREATE TABLE `recorridos` (
   KEY `fk_recorridos_nucleo_org_id` (`nucleo_org_id`),
   KEY `fk_recorridos_nucleo_des_id` (`nucleo_des_id`),
   KEY `fk_recorridos_encomienda_id` (`encomienda_id`),
+  CONSTRAINT `fk_recorridos_encomienda_id` FOREIGN KEY (`encomienda_id`) REFERENCES `encomiendas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_recorridos_nucleo_des_id` FOREIGN KEY (`nucleo_des_id`) REFERENCES `nucleos` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_recorridos_nucleo_org_id` FOREIGN KEY (`nucleo_org_id`) REFERENCES `nucleos` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_recorridos_transportista_id` FOREIGN KEY (`transportista_id`) REFERENCES `transportistas` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
@@ -173,13 +175,14 @@ CREATE TABLE `transportistas` (
   `saldo` decimal(14,3) unsigned NOT NULL DEFAULT '0.000',
   `licencia` varchar(12) DEFAULT NULL,
   `fecha_ingreso` date NOT NULL,
-  `disponibilidad` tinyint(1) NOT NULL,
-  `curso_aprobado` tinyint(1) NOT NULL,
+  `disponibilidad` tinyint(1) NOT NULL DEFAULT '0',
+  `curso_aprobado` tinyint(1) NOT NULL DEFAULT '0',
   `f_curso` date DEFAULT NULL,
   `antecedentes` tinyint(1) NOT NULL,
   `direccion_id` int(10) unsigned NOT NULL,
   `nucleo_id` int(255) unsigned NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_email_transportistas` (`email`) USING BTREE,
   KEY `direccion_transportador` (`direccion_id`),
   KEY `asociado_a` (`nucleo_id`),
   CONSTRAINT `asociado_a` FOREIGN KEY (`nucleo_id`) REFERENCES `nucleos` (`id`) ON UPDATE CASCADE,
@@ -214,11 +217,17 @@ CREATE TABLE `vuelos` (
   KEY `fk_recorridos_encomienda_id_recorrido_id` (`encomienda_id`,`recorrido_id`),
   CONSTRAINT `fk_recorridos_encomienda_id_recorrido_id` FOREIGN KEY (`encomienda_id`, `recorrido_id`) REFERENCES `recorridos` (`encomienda_id`, `id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;DROP PROCEDURE IF EXISTS sp_aceptar_invitacion;
-CREATE PROCEDURE `sp_aceptar_invitacion`(_encomienda_id VARCHAR(7),
+CREATE PROCEDURE `sp_aceptar_invitacion`(
+	_encomienda_id VARCHAR(7),
 	_transportista_id VARCHAR(9),
-	_vehiculo_id VARCHAR(8))
+	_vehiculo_id VARCHAR(8)
+)
 BEGIN
-	
+
+	IF _vehiculo_id <=> NULL THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '(sp_aceptar_invitacion) Error: vehiculo no puede ser NULL';
+	END IF;
 	IF !EXISTS(SELECT *
 			FROM invitaciones
 			WHERE transportista_id = _transportista_id
@@ -306,7 +315,8 @@ BEGIN
 		END IF;
     IF new_disp = FALSE THEN
 			UPDATE transportistas SET disponibilidad = FALSE WHERE id = transportista_id;
-    ELSE
+    ELSE
+
 			SET licencia = (SELECT t.licencia FROM transportistas t WHERE t.id = transportista_id);
 			IF (ISNULL(licencia)) THEN
 					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Transportista no posee licencia registrada';
@@ -333,7 +343,9 @@ BEGIN
 END;
 
 DROP PROCEDURE IF EXISTS sp_enviar_invitacion;
-CREATE PROCEDURE `sp_enviar_invitacion`(_encomienda_id VARCHAR(7))
+CREATE PROCEDURE `sp_enviar_invitacion`(
+	_encomienda_id VARCHAR(7)
+)
 BEGIN
 
 	DECLARE random INT;
@@ -406,16 +418,20 @@ BEGIN
 END;
 
 DROP PROCEDURE IF EXISTS sp_pagar_encomienda_transportista;
-CREATE PROCEDURE `sp_pagar_encomienda_transportista`(encomienda VARCHAR(7))
+CREATE PROCEDURE `sp_pagar_encomienda_transportista`(
+	encomienda VARCHAR(7)
+)
 BEGIN
 	
 	DECLARE tipo_vehiculo VARCHAR(15);
 	DECLARE comision FLOAT(255,2);
+	
 	SELECT v.tipo
 	INTO tipo_vehiculo
 	FROM encomiendas e
 	INNER JOIN vehiculos v ON v.id = e.vehiculo_id
 	WHERE e.id = encomienda;
+	
 	CASE tipo_vehiculo
 		WHEN 'motor' THEN
 			SELECT n.com_vehiculo_motor
@@ -423,13 +439,17 @@ BEGIN
 			FROM encomiendas e
 			INNER JOIN nucleos n ON n.id = e.nucleo_id
 			WHERE e.id = encomienda;
+			
 		WHEN 'bicicleta' THEN
 			SELECT n.com_bicicleta
 			INTO comision
 			FROM encomiendas e
 			INNER JOIN nucleos n ON n.id = e.nucleo_id
 			WHERE e.id = encomienda;
+			
 	END CASE;
+
+
 	UPDATE transportistas t
 	SET t.saldo = t.saldo + sf_calcular_costo_encomienda(encomienda) 
 		* comision
@@ -469,8 +489,21 @@ BEGIN
 	CALL sp_enviar_invitacion(_encomienda_id);
 END;
 
+DROP PROCEDURE IF EXISTS sp_retirar_saldo_transportista;
+CREATE PROCEDURE `sp_retirar_saldo_transportista`(
+	IN id_transportista VARCHAR(9), IN monto_retiro DECIMAL(14,3)
+)
+BEGIN
+	
+	UPDATE transportistas
+        SET saldo = saldo - monto_retiro
+        WHERE id_transportista = id;
+END;
+
 DROP PROCEDURE IF EXISTS sp_solicitar_encomienda;
-CREATE PROCEDURE `sp_solicitar_encomienda`(encomienda VARCHAR(7))
+CREATE PROCEDURE `sp_solicitar_encomienda`(
+	encomienda VARCHAR(7)
+)
 BEGIN
 	
 	IF !((SELECT estado
@@ -542,9 +575,11 @@ BEGIN
 END;
 
 DROP PROCEDURE IF EXISTS sp_update_estado;
-CREATE PROCEDURE `sp_update_estado`(encomienda VARCHAR(7),
+CREATE PROCEDURE `sp_update_estado`(
+	encomienda VARCHAR(7),
 	transportista VARCHAR(9),
-	newEstado VARCHAR(15))
+	newEstado VARCHAR(15)
+)
 BEGIN
 
 	DECLARE oldEstado VARCHAR(15);
@@ -603,6 +638,8 @@ BEGIN
 			
 				SET newEstado = 'en progreso';
 			WHEN 'en progreso'  THEN
+
+
 			
 				SET newEstado = 'culminada';
 				UPDATE encomiendas
@@ -694,7 +731,10 @@ BEGIN
 END;
 
 DROP TRIGGER IF EXISTS tg_historico_cliente;
-CREATE TRIGGER `tg_historico_cliente` AFTER UPDATE ON `clientes` FOR EACH ROW BEGIN
+CREATE TRIGGER tg_historico_cliente
+AFTER UPDATE ON clientes
+FOR EACH ROW
+BEGIN
 	IF NEW.saldo <> OLD.saldo THEN
 		INSERT INTO historico_clientes (cliente_id, fecha, valor, saldo_final)
 		VALUES (NEW.id, NOW(), NEW.saldo - OLD.saldo, NEW.saldo);
@@ -702,14 +742,36 @@ CREATE TRIGGER `tg_historico_cliente` AFTER UPDATE ON `clientes` FOR EACH ROW BE
 END;
 
 DROP TRIGGER IF EXISTS tg_before_encomiendas_insert_estado;
-CREATE TRIGGER `tg_before_encomiendas_insert_estado` BEFORE INSERT ON `encomiendas` FOR EACH ROW BEGIN
+CREATE TRIGGER tg_before_encomiendas_insert_estado
+    BEFORE INSERT
+    ON encomiendas FOR EACH ROW
+BEGIN
     IF NEW.tipo = 'extendida' THEN
         SET NEW.estado = 'en espera';
     END IF;
 END;
 
+DROP TRIGGER IF EXISTS tg_before_encomiendas_insert_id;
+CREATE TRIGGER tg_before_encomiendas_insert_id
+    BEFORE INSERT
+    ON encomiendas FOR EACH ROW
+BEGIN
+    DECLARE _id VARCHAR(7);
+    SELECT MAX(id)
+    INTO _id
+    FROM encomiendas;
+    SET _id = HEX(CONV(_id, 16, 10) + 1);
+    WHILE LENGTH(_id) < 7 DO
+        SET _id = CONCAT('0', _id);
+    END WHILE;
+    SET NEW.id = _id;
+END;
+
 DROP TRIGGER IF EXISTS tg_after_encomiendas_insert_publicar_recorrido;
-CREATE TRIGGER `tg_after_encomiendas_insert_publicar_recorrido` AFTER INSERT ON `encomiendas` FOR EACH ROW BEGIN
+CREATE TRIGGER tg_after_encomiendas_insert_publicar_recorrido
+    AFTER INSERT
+    ON encomiendas FOR EACH ROW
+BEGIN
     IF NEW.tipo = 'extendida' THEN
         INSERT INTO recorridos (id, encomienda_id, nucleo_org_id, nucleo_des_id)
             VALUES (0, NEW.id, NEW.nucleo_id, NEW.nucleo_rec_id);
@@ -717,7 +779,10 @@ CREATE TRIGGER `tg_after_encomiendas_insert_publicar_recorrido` AFTER INSERT ON 
 END;
 
 DROP TRIGGER IF EXISTS tg_CHK_vehiculo_id;
-CREATE TRIGGER `tg_CHK_vehiculo_id` BEFORE UPDATE ON `encomiendas` FOR EACH ROW BEGIN
+CREATE TRIGGER tg_CHK_vehiculo_id
+	BEFORE UPDATE
+	ON encomiendas FOR EACH ROW
+BEGIN
 	IF !(OLD.vehiculo_id <=> NEW.vehiculo_id)
 		AND !(NEW.vehiculo_id <=> NULL)
 		AND !((SELECT transportista_id
@@ -730,7 +795,10 @@ CREATE TRIGGER `tg_CHK_vehiculo_id` BEFORE UPDATE ON `encomiendas` FOR EACH ROW 
 END;
 
 DROP TRIGGER IF EXISTS tg_chk_recorrido_transportista;
-CREATE TRIGGER `tg_chk_recorrido_transportista` BEFORE UPDATE ON `recorridos` FOR EACH ROW BEGIN
+CREATE TRIGGER tg_chk_recorrido_transportista
+	BEFORE UPDATE
+	ON recorridos FOR EACH ROW
+BEGIN
 	IF !(OLD.transportista_id <=> NEW.transportista_id)
 		AND (
 			SELECT nucleo_id
@@ -745,17 +813,26 @@ CREATE TRIGGER `tg_chk_recorrido_transportista` BEFORE UPDATE ON `recorridos` FO
 END;
 
 DROP TRIGGER IF EXISTS validar_fecha_transportista_insert;
-CREATE TRIGGER `validar_fecha_transportista_insert` BEFORE INSERT ON `transportistas` FOR EACH ROW BEGIN
+CREATE TRIGGER validar_fecha_transportista_insert
+BEFORE INSERT ON transportistas
+FOR EACH ROW
+BEGIN
   CALL sp_validar_ingreso_transportista(NEW.fecha_ingreso);
 END;
 
 DROP TRIGGER IF EXISTS validar_fecha_transportista_update;
-CREATE TRIGGER `validar_fecha_transportista_update` BEFORE UPDATE ON `transportistas` FOR EACH ROW BEGIN
+CREATE TRIGGER validar_fecha_transportista_update
+BEFORE UPDATE ON transportistas
+FOR EACH ROW
+BEGIN
   CALL sp_validar_ingreso_transportista(NEW.fecha_ingreso);
 END;
 
 DROP TRIGGER IF EXISTS tg_historico_transportista;
-CREATE TRIGGER `tg_historico_transportista` AFTER UPDATE ON `transportistas` FOR EACH ROW BEGIN
+CREATE TRIGGER tg_historico_transportista
+AFTER UPDATE ON transportistas
+FOR EACH ROW
+BEGIN
 	IF NEW.saldo <> OLD.saldo THEN
 		INSERT INTO historico_transportistas (transportista_id, fecha, valor, saldo_final)
 		VALUES (NEW.id, NOW(), NEW.saldo - OLD.saldo, NEW.saldo);

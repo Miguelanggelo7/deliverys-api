@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS sp_cambiar_disponibilidad;
+DROP PROCEDURE IF EXISTS sp_cambiar_disponibilidad;
 
-CREATE FUNCTION sp_cambiar_disponibilidad(
+CREATE PROCEDURE sp_cambiar_disponibilidad(
   IN transportista_id VARCHAR(9),
   IN new_disp TINYINT(1)
 )
@@ -21,10 +21,10 @@ BEGIN
 			UPDATE transportistas SET disponibilidad = FALSE WHERE id = transportista_id;
     ELSE
 			-- Validar que tenga licencia
-			SET licencia = (SELECT t.licencia FROM transportistas t WHERE t.id = transportista_id);
-			IF (ISNULL(licencia)) THEN
-					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Transportista no posee licencia registrada';
-			END IF;
+			-- SET licencia = (SELECT t.licencia FROM transportistas t WHERE t.id = transportista_id);
+			-- IF (ISNULL(licencia)) THEN
+			-- 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Transportista no posee licencia registrada';
+			-- END IF;
 
 			-- Validar que tenga vehiculos
 			IF (SELECT COUNT(*) FROM vehiculos v WHERE v.transportista_id = transportista_id) = 0 THEN

@@ -58,10 +58,10 @@ const aceptarRecorrido =  async (encomienda_id, recorrido_id, transportista_id, 
 
   const rows = await db.query(query, params);
 
-  if (typeof rows[0][0] === "undefined")
-    throw "not-found";
+  console.log(rows[0].affectedRows);
 
-  return rows[0][0];
+  if (rows[0].affectedRows === 0)
+    throw "not-found";
 };
 
 const terminarRecorrido =  async (encomienda_id, recorrido_id) => {
@@ -73,10 +73,9 @@ const terminarRecorrido =  async (encomienda_id, recorrido_id) => {
 
   const rows = await db.query(query, params);
 
-  if (typeof rows[0][0] === "undefined")
+  if (rows[0].affectedRows === 0)
     throw "not-found";
 
-  return rows[0][0];
 };
 
 

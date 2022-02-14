@@ -1,1 +1,6 @@
-CREATE INDEX idx_email_transportistas ON transportistas(email);
+
+
+
+
+
+

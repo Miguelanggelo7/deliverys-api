@@ -1,4 +1,4 @@
-DROP TRIGGER IF EXISTS tg_CHK_transportista_vehiculo;
+DROP TRIGGER IF EXISTS tg_CHK_vehiculo_id;
 
 CREATE TRIGGER tg_CHK_vehiculo_id
 	BEFORE UPDATE

@@ -6,6 +6,12 @@ CREATE PROCEDURE sp_aceptar_invitacion(
 	_vehiculo_id VARCHAR(8)
 )
 BEGIN
+
+	IF _vehiculo_id <=> NULL THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '(sp_aceptar_invitacion) Error: vehiculo no puede ser NULL';
+
+	END IF;
 	
 	IF !EXISTS(SELECT *
 			FROM invitaciones
@@ -14,6 +20,18 @@ BEGIN
 			
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '(sp_aceptar_invitacion) Error: la invitacion no existe';
+	END IF;
+
+	IF !(
+		SELECT _vehiculo_id IN (
+			SELECT id
+			FROM vehiculos
+			WHERE transportista_id = _transportista_id
+		)
+	) THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '(sp_aceptar_invitacion) Error: el vehiculo no pertenece al transportista';
+
 	END IF;
 	
 	UPDATE encomiendas

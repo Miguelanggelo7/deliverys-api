@@ -34,24 +34,23 @@ const findById = async (id) => {
 const create = async (nucleos) => {
   const query = `
     INSERT INTO nucleos
-    (id, direccion_id, nombre, telefono, com_vuelo, com_vehiculo_motor, com_bicicleta)
+    (direccion_id, nombre, telefono, com_vuelo, com_vehiculo_motor, com_bicicleta, precio_por_kg)
     VALUES(?, ?, ?, ?, ?, ?, ?)
-    RETURNING *
   `;
 
   const params = [
-    nucleos.id,
     nucleos.direccion_id,
     nucleos.nombre,
     nucleos.telefono,
     nucleos.com_vuelo,
     nucleos.com_vehiculo_motor,
-    nucleos.com_bicicleta
+    nucleos.com_bicicleta,
+    nucleos.precio_por_kg
   ];
 
   const row = await db.query(query, params);
 
-  return row;
+  return row[0].insertId;
 };
 
 // Actualizar

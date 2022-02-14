@@ -8,6 +8,7 @@ const nucleos = require("./nucleos");
 const paises = require("./paises");
 const invitaciones = require('./invitaciones');
 const recorridos = require('./recorridos');
+const vehiculos = require('./vehiculos');
 
 module.exports = app => {
   app.use("/clientes", clientes);
@@ -20,4 +21,5 @@ module.exports = app => {
   app.use("/paises", paises);
   app.use('/invitaciones', invitaciones);
   app.use('/recorridos', recorridos);
+  app.use('/vehiculos', vehiculos);
 };

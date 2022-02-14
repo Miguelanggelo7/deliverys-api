@@ -56,7 +56,7 @@ const create = async (vehiculo) => {
 
   const params = [
     vehiculo.id,
-    id,
+    vehiculo.transportista_id,
     vehiculo.modelo,
     vehiculo.marca,
     vehiculo.color,
@@ -68,19 +68,28 @@ const create = async (vehiculo) => {
   return row[0][0].shift();
 };
 
-// // Actualizar
-// const update = async (id, vehiculo) => {
-//   const query = `
-//     UPDATE vehiculos
-//     SET
-//     descripcion = ?,
-//     WHERE id = ?
-//   `;
+// Actualizar
+const update = async (vehiculo) => {
+  const query = `
+    UPDATE vehiculos
+    SET
+    modelo = ?,
+    marca = ?,
+    color = ?,
+    tipo = ?
+    WHERE id = ?
+  `;
 
-//   const params = [vehiculo.descripcion, id];
+  const params = [
+    vehiculo.modelo, 
+    vehiculo.marca, 
+    vehiculo.color, 
+    vehiculo.tipo,
+    vehiculo.id
+  ];
 
-//   await db.query(query, params);
-// };
+  await db.query(query, params);
+};
 
 // Eliminar
 const deleteVehiculo = async (id) => {
@@ -97,5 +106,5 @@ const deleteVehiculo = async (id) => {
     throw "not-found";
 };
 
-  module.exports = { findAll, findById, create, findByTransportistaId };
+  module.exports = { findAll, findById, create, findByTransportistaId, update };
   module.exports.delete = deleteVehiculo;

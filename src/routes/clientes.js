@@ -16,6 +16,12 @@ router.get("/:id", async (req, res) => {
   res.json(row);
 });
 
+router.get("/encomienda/:id", async (req, res) => {
+  const id = req.params.id;
+  const row = await Cliente.findByEncomienda(id);
+  res.json(row);
+});
+
 // Crear cliente
 router.post("/singup", async (req, res) => {
   const id = await Cliente.create(req.body);
@@ -53,6 +59,13 @@ router.patch('/login', async (req, res) => {
     });
   }
   
+});
+
+
+router.patch('/recargar-saldo', async (req, res) => {
+  const {id, monto} = req.body;
+  const saldo = await Cliente.recargarSaldo(id, monto);
+  res.status(200).json({msg: `Se ha recargado su saldo con exito, ahora posee ${saldo}`});
 });
 
 module.exports = router;

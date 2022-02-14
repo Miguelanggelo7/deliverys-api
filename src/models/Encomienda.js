@@ -1,4 +1,4 @@
-const db = require("../db");
+const db = require('../db');
 
 // Buscar todas
 const findAll = async () => {
@@ -32,19 +32,16 @@ const findById = async (id) => {
 
 // Crear nueva encomienda junto con sus paquetes
 const create = async (paquetes, encomienda) => {
-  const connection = await db.getConnection();
-  try {
-    
-    await connection.beginTransaction();
 
     const query = `
-      INSERT INTO encomiendas 
-      VALUES (?, ?, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?, ?)
-      RETURNING *
+      INSERT INTO encomiendas (tipo, nucleo_id, nucleo_rec_id,
+        transportista_id, vehiculo_id, cliente_env_id, cliente_rec_id)
+      VALUES ( ?, ?, ?, ?, ?, ?, ?);
+
+      SELECT MAX(id) as id FROM encomiendas;
     `;
 
     const params = [
-      encomienda.id,
       encomienda.tipo,
       encomienda.nucleo_id,
       encomienda.nucleo_rec_id,
@@ -52,73 +49,128 @@ const create = async (paquetes, encomienda) => {
       encomienda.vehiculo_id,
       encomienda.cliente_env_id,
       encomienda.cliente_rec_id,
-      encomienda.precio
     ];
     
-    const [newEncomienda] = await connection.query(query, params);
+    const resulset =  await db.query(query, params);
+    const newEncomienda = {id: resulset[0][1][0].id};
+    const promises_paquetes = [];
+    const promises_articulos = [];
 
-    for (const item of paquetes) {
-      const query1 = `
+    for (let p of paquetes) {
+      const query = `
         INSERT INTO paquetes (peso, alto, ancho, largo, fragil, encomienda_id)
         VALUES (?, ?, ?, ?, ?, ?)
-        RETURNING *
       `;
 
-      const params1 = [
-        item.peso,
-        item.alto,
-        item.ancho,
-        item.largo,
-        item.fragil,
-        encomienda.id
+      const params = [
+        p.peso,
+        p.alto,
+        p.ancho,
+        p.largo,
+        p.fragil,
+        newEncomienda.id
       ];
 
-      const promises = [];
+      promises_paquetes.push(db.query(query, params));
 
-      const [paquete] = await connection.query(query1, params1);
-      
-      promises.push(
-        Promise.all(
-          item.articulos.map(art => {
-            const query2 = `
-              INSERT INTO articulos (paquete_id, descripcion, cantidad)
-              VALUES (?, ?, ?)
-            `;
-
-            const params2 = [
-              paquete[0].id,
-              art.descripcion,
-              art.cantidad
-            ];
-
-            return connection.query(query2, params2);
-          })
-        )
-      );
-
-      await Promise.all(promises);
-    };
-
-    const [newPaquetes] = await connection.query(`
-      SELECT * FROM paquetes WHERE encomienda_id = ?
-    `, [encomienda.id]);
-
-    const data = {
-      encomienda: newEncomienda,
-      paquetes: newPaquetes
     }
 
-    await connection.commit();
-    return data;
+    const row_paquetes = await Promise.all(promises_paquetes);
 
-  } catch (err) {
-    await connection.rollback();
-    console.log(err)
-    throw err;
+    for (let i=0; i < paquetes.length; i++) {
+      for (let a of paquetes[i].articulos) {
 
-  } finally {
-    connection.release();
-  }
+        const query = `
+          INSERT INTO articulos (paquete_id, descripcion, cantidad)
+          VALUES (?, ?, ?)
+        `;
+  
+        const params = [
+          row_paquetes[i][0].insertId,
+          a.descripcion,
+          a.cantidad
+        ];
+  
+        promises_articulos.push(db.query(query, params));
+      }  
+    }
+
+    await Promise.all(promises_articulos);
+
+    return newEncomienda.id;
+    
+  // const connection = await db.getConnection();
+  // try {
+    
+  //   await connection.beginTransaction();
+  //   for (const item of paquetes) {
+  //     const query1 = `
+  //       INSERT INTO paquetes (peso, alto, ancho, largo, fragil, encomienda_id)
+  //       VALUES (?, ?, ?, ?, ?, ?)
+  //     `;
+
+  //     const params = [
+  //       item.peso,
+  //       item.alto,
+  //       item.ancho,
+  //       item.largo,
+  //       item.fragil,
+  //       newEncomienda.id
+  //     ];
+
+  //     const promises = [];
+
+      
+
+  //     const arr = await connection.query(query1, params1);
+
+  //     const paquete = {};
+  //     paquete.id = arr[0].insertId;
+      
+  //     promises.push(
+  //       Promise.all(
+  //         item.articulos.map(art => {
+  //           const query2 = `
+  //             INSERT INTO articulos (paquete_id, descripcion, cantidad)
+  //             VALUES (?, ?, ?)
+  //           `;
+
+  //           const params2 = [
+  //             paquete.id,
+  //             art.descripcion,
+  //             art.cantidad
+  //           ];
+
+  //           return connection.query(query2, params2);
+  //         })
+  //       )
+  //     );
+
+  //     await Promise.all(promises);
+
+  //     return newEncomienda.id;
+  //   };
+
+  //   const [newPaquetes] = await connection.query(`
+  //     SELECT * FROM paquetes WHERE encomienda_id = ?
+  //   `, [newEncomienda.id]);
+
+  //   const data = {
+  //     encomienda: newEncomienda,
+  //     paquetes: newPaquetes
+  //   }
+
+  //   await connection.commit();
+  //   return data;
+
+  // } catch (err) {
+  //   await connection.rollback();
+  //   console.log(err)
+  //   throw err;
+
+  // } finally {
+  //   connection.release();
+  // }
 };
 
 // Actualizar

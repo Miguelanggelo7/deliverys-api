@@ -27,17 +27,17 @@ router.get("/:encomienda_id/:recorrido_id", async (req, res) => {
 // aceptar recorrido
 router.patch("/aceptar", async (req, res) => {
   const { encomienda_id, recorrido_id, transportista_id, nucleo_des_id } = req.body;
-  const result = await Recorrido
+  await Recorrido
     .aceptarRecorrido(encomienda_id, recorrido_id, transportista_id, nucleo_des_id);
-  res.json(result);
+  res.status(200).json({msg: 'recorrido aceptado'});
 });
 
 // terminar recorrido
 router.patch("/terminar", async (req, res) => {
   const { encomienda_id, recorrido_id } = req.body;
-  const result = await Recorrido
+  await Recorrido
     .terminarRecorrido(encomienda_id, recorrido_id);
-  res.json(result);
+  res.status(200).json({msg: 'recorrido terminado'});
 });
 
 module.exports = router;

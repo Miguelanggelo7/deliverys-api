@@ -28,6 +28,24 @@ const findById =  async (id) => {
   return rows[0][0];
 };
 
+const findByEncomienda = async (encomienda) => {
+  const query = `
+    SELECT *
+    FROM vw_transportistas_for_clientes
+    WHERE encomienda = ?
+  `;
+
+
+  const params = [encomienda];
+
+  const rows = await db.query(query, params);
+
+  if (typeof rows[0] === "undefined")
+    throw "not-found";
+
+  return rows[0];
+}
+
 const create = async (transportistas) => {
   const query = `
     INSERT INTO transportistas
@@ -100,6 +118,7 @@ const update = async (id, transportistas) => {
 };
 
 const updateDisponibilidad = async (id, disponibilidad) => {
+
   const query = `
     CALL sp_cambiar_disponibilidad(?, ?)
   `;
@@ -107,25 +126,6 @@ const updateDisponibilidad = async (id, disponibilidad) => {
   const params = [id, disponibilidad];
 
   await db.query(query, params);
-}
-
-const createVehiculo = async (id, vehiculo) => {
-  const query = `
-    CALL sp_agregar_vehiculo(?, ?, ?, ?, ?, ?)
-  `;
-
-  const params = [
-    vehiculo.id,
-    id,
-    vehiculo.modelo,
-    vehiculo.marca,
-    vehiculo.color,
-    vehiculo.tipo
-  ];
-
-  const row = await db.query(query, params);
-
-  return row[0][0].shift();
 }
 
 const deleteTransportista = async (id) => {
@@ -163,14 +163,29 @@ const login = async (email, password) => {
   
 }
 
+const retirarSaldo = async (id, monto) => {
+  const query = `
+    SELECT sf_retirar_saldo_transportista(?,?) as saldo
+  `
+  const params = [id, monto];
+  const response = await db.query(query, params);
+
+  if (!response[0][0].saldo){
+    throw "not-found";
+  }
+  
+  return response[0][0].saldo;
+}
+
 module.exports = {
   findAll,
   findById,
   create,
   update,
   updateDisponibilidad,
-  createVehiculo,
-  login
+  login,
+  retirarSaldo,
+  findByEncomienda
 };
 
 module.exports.delete = deleteTransportista;

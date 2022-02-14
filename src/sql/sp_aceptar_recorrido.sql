@@ -18,6 +18,15 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '(sp_aceptar_recorrido) Error: el recorrido no esta disponible';
     END IF;
+
+    IF !(
+        SELECT curso_aprobado
+        FROM transportistas
+        WHERE id =  _transportista_id
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '(sp_aceptar_recorrido) Error: el transportista no ha aprobado el curso';
+    END IF;
     
     UPDATE recorridos
         SET transportista_id = _transportista_id,

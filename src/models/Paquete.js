@@ -30,6 +30,22 @@ const findById = async (id) => {
   return rows[0][0];
 };
 
+// Encuentra todos los paquetes de una encomienda
+const findByEncomienda = async (id) => {
+  const query = `
+    SELECT *
+    FROM paquetes 
+    WHERE encomienda_id = ?
+  `;
+
+  const params = [id];
+
+  const [rows] = await db.query(query, params);
+
+  return rows;
+}
+
+
 // Crear nueva
 const create = async (paquetes) => {
   const query = `
@@ -93,5 +109,5 @@ const deletePaquete = async (id) => {
     throw "not-found";
 };
 
-  module.exports = { findAll, findById, create, update  };
+  module.exports = { findAll, findById, create, update, findByEncomienda  };
   module.exports.delete = deletePaquete;

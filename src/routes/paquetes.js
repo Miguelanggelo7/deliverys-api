@@ -17,6 +17,12 @@ router.get("/:id", async (req, res) => {
   res.json(paquete);
 });
 
+router.get("/encomienda/:id", async (req, res) => {
+  const id = req.params.id;
+  const paquete = await Paquete.findByEncomienda(id);
+  res.json(paquete);
+});
+
 //Crear uno
 router.post("/", async (req, res) => {
   const row = await Paquete.create(req.body);

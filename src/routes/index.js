@@ -9,6 +9,7 @@ const paises = require("./paises");
 const invitaciones = require('./invitaciones');
 const recorridos = require('./recorridos');
 const vehiculos = require('./vehiculos');
+const paquetes = require('./paquetes');
 
 module.exports = app => {
   app.use("/clientes", clientes);
@@ -22,4 +23,5 @@ module.exports = app => {
   app.use('/invitaciones', invitaciones);
   app.use('/recorridos', recorridos);
   app.use('/vehiculos', vehiculos);
+  app.use('/paquetes', paquetes);
 };

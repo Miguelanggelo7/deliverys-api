@@ -1,6 +1,6 @@
 CREATE USER cliente IDENTIFIED BY 'cliente123';
 
-GRANT ALL ON aritculos TO cliente;
+GRANT ALL ON articulos TO cliente;
 GRANT INSERT, UPDATE, SELECT ON clientes TO cliente;
 GRANT SELECT ON direcciones TO cliente;
 GRANT SELECT, UPDATE, INSERT ON encomiendas TO cliente;

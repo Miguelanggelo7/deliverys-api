@@ -18,6 +18,7 @@ const findByTransportistaId = async (transportista_id) => {
   const query = `
     SELECT * FROM invitaciones
     WHERE transportista_id = ?
+    AND estado IS NULL
     ORDER BY fecha_hora ASC
   `;
 

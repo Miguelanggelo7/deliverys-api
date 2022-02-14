@@ -177,6 +177,18 @@ const retirarSaldo = async (id, monto) => {
   return response[0][0].saldo;
 }
 
+const validarCurso = async (id) => {
+  const query = `
+    CALL sp_validar_curso_transportista(?)
+  `
+  const params = [id];
+  const response = await db.query(query, params);
+
+  if (response[0].affectedRows === 0)
+    throw "not-found";
+
+}
+
 module.exports = {
   findAll,
   findById,
@@ -185,7 +197,8 @@ module.exports = {
   updateDisponibilidad,
   login,
   retirarSaldo,
-  findByEncomienda
+  findByEncomienda,
+  validarCurso
 };
 
 module.exports.delete = deleteTransportista;

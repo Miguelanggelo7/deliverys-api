@@ -78,4 +78,10 @@ router.patch('/retirar-saldo', async (req, res) => {
   res.status(200).json({msg: `Se ha retirado su saldo con exito, ahora posee ${saldo}`});
 });
 
+router.patch('/validar-curso', async (req, res) => {
+  const {id} = req.body;
+  await Transportista.validarCurso(id);
+  res.status(200).json({msg: `Se ha validado el curso del transportista ${id}`});
+});
+
 module.exports = router;

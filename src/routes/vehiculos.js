@@ -16,6 +16,12 @@ router.get("/:id", async (req, res) => {
   res.json(row);
 });
 
+router.get("/transportista/:id", async (req, res) => {
+  const id = req.params.id;
+  const row = await Vehiculo.findByTransportistaId(id);
+  res.json(row);
+});
+
 // Crear Vehiculo
 router.post("/", async (req, res) => {
   const vehiculo = await Vehiculo.create(req.body);

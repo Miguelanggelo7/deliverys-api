@@ -14,3 +14,4 @@ GRANT SELECT ON vw_transportistas_for_clientes TO cliente;
 GRANT EXECUTE ON PROCEDURE sp_solicitar_encomienda TO cliente;
 GRANT EXECUTE ON FUNCTION sf_consultar_saldo_cliente TO cliente;
 
+

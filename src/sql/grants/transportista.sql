@@ -17,6 +17,7 @@ GRANT EXECUTE ON PROCEDURE sp_agregar_vehiculo TO transportista;
 GRANT EXECUTE ON PROCEDURE sp_cambiar_disponibilidad TO transportista;
 GRANT EXECUTE ON PROCEDURE sp_terminar_recorrido TO transportista;
 GRANT EXECUTE ON PROCEDURE sp_update_estado TO transportista;
+GRANT EXECUTE ON FUNCTION sf_retirar_saldo_transportista TO transportista;
 GRANT SELECT ON vw_clientes_for_transportistas TO transportista;
 
 

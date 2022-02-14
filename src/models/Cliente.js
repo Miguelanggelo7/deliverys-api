@@ -129,8 +129,6 @@ const login = async (email, password) => {
   const params = [password, email];
   const response = await db.query(query, params);
 
-  console.log(response);
-
   if (response[0].length === 0){
     throw "not-found";
   }

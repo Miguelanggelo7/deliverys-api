@@ -21,8 +21,8 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   const paquetes = req.body.paquetes;
   const encomienda = req.body.encomienda;
-  const id = await Encomienda.create(paquetes, encomienda);
-  res.status(201).json({ msg: "Encomienda creada", id });
+  const row = await Encomienda.create(paquetes, encomienda);
+  res.status(201).json({ msg: "Encomienda creada", encomienda: row });
 });
 
 // Actualizar 

@@ -26,6 +26,7 @@ TO transportista;
 GRANT ALL ON vehiculos TO transportista;
 GRANT INSERT, UPDATE, SELECT ON vuelos TO transportista;
 GRANT EXECUTE ON PROCEDURE sp_aceptar_invitacion TO transportista;
+GRANT EXECUTE ON PROCEDURE sp_rechazar_invitacion TO transportista;
 GRANT EXECUTE ON PROCEDURE sp_aceptar_recorrido TO transportista;
 GRANT EXECUTE ON PROCEDURE sp_agregar_vehiculo TO transportista;
 GRANT EXECUTE ON PROCEDURE sp_cambiar_disponibilidad TO transportista;
@@ -35,3 +36,4 @@ GRANT EXECUTE ON FUNCTION sf_retirar_saldo_transportista TO transportista;
 GRANT SELECT ON vw_clientes_for_transportistas TO transportista;
 
 
+SHOW GRANTS FOR transportista

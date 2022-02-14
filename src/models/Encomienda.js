@@ -15,12 +15,14 @@ const findAll = async () => {
 // Buscar por id
 const findById = async (id) => {
   const query = `
-    SELECT *
+    SELECT tipo, fh_salida, fh_llegada, estado, nucleo_id, nucleo_rec_id,
+    transportista_id, vehiculo_id, cliente_env_id, cliente_rec_id, 
+    sf_calcular_costo_encomienda(?) as precio
     FROM encomiendas
     WHERE id = ?
   `;
 
-  const params = [id];
+  const params = [id,id];
 
   const rows = await db.query(query, params);
 
@@ -104,8 +106,12 @@ const create = async (paquetes, encomienda) => {
     };
 
     const [newEncomienda] = await connection.query(`
-      SELECT * FROM encomiendas WHERE id = ? 
-    `, [encomiendaId]);
+      SELECT tipo, fh_salida, fh_llegada, estado, nucleo_id, nucleo_rec_id,
+      transportista_id, vehiculo_id, cliente_env_id, cliente_rec_id, 
+      sf_calcular_costo_encomienda(?) as precio
+      FROM encomiendas
+      WHERE id = ? 
+    `, [encomiendaId,encomiendaId]);
 
     await connection.commit();
     return newEncomienda[0];

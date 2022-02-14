@@ -23,10 +23,10 @@ const findByNucleo =  async (nucleo) => {
 
   const rows = await db.query(query, params);
 
-  if (typeof rows[0][0] === "undefined")
+  if (typeof rows[0].length === 0)
     throw "not-found";
 
-  return rows[0][0];
+  return rows[0];
 };
 
 // Obtener por id
@@ -57,8 +57,6 @@ const aceptarRecorrido =  async (encomienda_id, recorrido_id, transportista_id, 
   const params = [encomienda_id, recorrido_id, transportista_id, nucleo_des_id];
 
   const rows = await db.query(query, params);
-
-  console.log(rows[0].affectedRows);
 
   if (rows[0].affectedRows === 0)
     throw "not-found";

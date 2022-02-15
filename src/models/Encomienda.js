@@ -15,7 +15,7 @@ const findAll = async () => {
 // Buscar por id
 const findById = async (id) => {
   const query = `
-    SELECT tipo, fh_salida, fh_llegada, estado, nucleo_id, nucleo_rec_id,
+    SELECT id, tipo, fh_salida, fh_llegada, estado, nucleo_id, nucleo_rec_id,
     transportista_id, vehiculo_id, cliente_env_id, cliente_rec_id, 
     sf_calcular_costo_encomienda(?) as precio
     FROM encomiendas
@@ -106,7 +106,7 @@ const create = async (paquetes, encomienda) => {
     };
 
     const [newEncomienda] = await connection.query(`
-      SELECT tipo, fh_salida, fh_llegada, estado, nucleo_id, nucleo_rec_id,
+      SELECT id, tipo, fh_salida, fh_llegada, estado, nucleo_id, nucleo_rec_id,
       transportista_id, vehiculo_id, cliente_env_id, cliente_rec_id, 
       sf_calcular_costo_encomienda(?) as precio
       FROM encomiendas
